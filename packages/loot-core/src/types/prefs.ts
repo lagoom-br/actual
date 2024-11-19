@@ -119,7 +119,7 @@ export type GlobalPrefsJson = Partial<{
   theme?: GlobalPrefs['theme'];
   'preferred-dark-theme'?: GlobalPrefs['preferredDarkTheme'];
   'category-expanded-state'?: string;
-  'syncServerConfig'?: string;
+  syncServerConfig?: string;
   'server-self-signed-cert'?: GlobalPrefs['serverSelfSignedCert'];
 }>;
 

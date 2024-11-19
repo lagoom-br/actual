@@ -3,6 +3,7 @@ import express from 'express';
 import { disableOpenID, enableOpenID, isAdmin } from './account-db.js';
 import {
   isValidRedirectUrl,
+  loginOutOpenIdProvider,
   loginWithOpenIdFinalize,
 } from './accounts/openid.js';
 import { checkPassword } from './accounts/password.js';
@@ -103,6 +104,22 @@ app.get('/callback', async (req, res) => {
   }
 
   res.redirect(url);
+});
+
+app.get('/logout', async (req, res) => {
+  const { error, url } = await loginOutOpenIdProvider(req.query);
+
+  if (error) {
+    if (url) {
+      res.send({ url });
+      return;
+    }
+
+    res.status(400).send({ status: 'error', reason: error });
+    return;
+  }
+
+  res.send({ url });
 });
 
 app.use(errorMiddleware);

@@ -303,12 +303,11 @@ async function logoutOpenid({ returnUrl }: { returnUrl: string }) {
       return { error: 'server-not-configured' };
     }
     res = JSON.parse(
-      await get(
-        server.BASE_SERVER + `/openid/logout?returnUrl=${returnUrl}`,
-      ),
+      await get(server.BASE_SERVER + `/openid/logout?returnUrl=${returnUrl}`),
     );
   } catch (err) {
-    return { error: (err as any)?.reason || 'network-failure' };
+    const reason = err instanceof PostError ? err.reason : 'network-failure';
+    return { error: reason };
   }
 
   if (res.url) {

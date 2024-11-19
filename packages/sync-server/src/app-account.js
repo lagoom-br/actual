@@ -10,7 +10,7 @@ import {
 } from './account-db.js';
 import { isValidRedirectUrl, loginWithOpenIdSetup } from './accounts/openid.js';
 import { changePassword, loginWithPassword } from './accounts/password.js';
-import { config } from './load-config.js';
+import finalConfig from './load-config.js';
 import {
   errorMiddleware,
   requestLoggerMiddleware,
@@ -43,8 +43,8 @@ app.get('/needs-bootstrap', (req, res) => {
       availableLoginMethods,
       multiuser: getActiveLoginMethod() === 'openid',
       autoLogin:
-        'openId' in config && 'autoLogin' in config.openId
-          ? config.openId.autoLogin
+        'openId' in finalConfig && 'autoLogin' in finalConfig.openId
+          ? finalConfig.openId.autoLogin
           : false,
     },
   });

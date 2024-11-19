@@ -100,7 +100,10 @@ async function saveGlobalPrefs(prefs: GlobalPrefs) {
     );
   }
   if (prefs.syncServerConfig !== undefined) {
-    await asyncStorage.setItem('syncServerConfig', JSON.stringify(prefs.syncServerConfig));
+    await asyncStorage.setItem(
+      'syncServerConfig',
+      JSON.stringify(prefs.syncServerConfig),
+    );
   }
   return 'ok';
 }
@@ -149,7 +152,9 @@ async function loadGlobalPrefs(): Promise<GlobalPrefs> {
         ? preferredDarkTheme
         : 'dark',
     serverSelfSignedCert: serverSelfSignedCert || undefined,
-    syncServerConfig: syncServerConfig ? JSON.parse(syncServerConfig) : undefined,
+    syncServerConfig: syncServerConfig
+      ? JSON.parse(syncServerConfig)
+      : undefined,
   };
 }
 
