@@ -299,6 +299,7 @@ export interface ServerHandlers {
           active: boolean;
         }[];
         multiuser: boolean;
+        autoLogin: boolean;
       }
   >;
 

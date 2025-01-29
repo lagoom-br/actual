@@ -1578,6 +1578,7 @@ handlers['subscribe-needs-bootstrap'] = async function ({
     ],
     multiuser: res.data.multiuser || false,
     hasServer: true,
+    autoLogin: res.data.autoLogin || false,
   };
 };
 
