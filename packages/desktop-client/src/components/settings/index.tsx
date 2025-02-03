@@ -199,7 +199,7 @@ export function Settings() {
         <About />
         <ThemeSettings />
         <FormatSettings />
-        {/* <LanguageSettings /> */}
+        <LanguageSettings />
         <AuthSettings />
         <EncryptionSettings />
         <BudgetTypeSettings />
