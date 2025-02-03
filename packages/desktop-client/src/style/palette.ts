@@ -85,6 +85,6 @@ export const hover = oldColors.hover;
 export const beige50 = '#FCFCFC';
 export const beige100 = '#F1F0F0';
 export const beige500 = '#E3C39D';
-export const beige700 = "#A68868";
+export const beige700 = '#A68868';
 export const lavendergrey = '#B9BCCD';
 export const slateblue = '#617D98';

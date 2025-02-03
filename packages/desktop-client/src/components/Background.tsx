@@ -45,7 +45,6 @@ export function Background() {
             />
           </linearGradient>
         </defs>
-
       </svg>
     </div>
   );
