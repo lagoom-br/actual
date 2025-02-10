@@ -44,6 +44,7 @@ import { Modals } from './Modals';
 import { ResponsiveProvider } from './responsive/ResponsiveProvider';
 import { SidebarProvider } from './sidebar/SidebarProvider';
 import { UpdateNotification } from './UpdateNotification';
+import { setI18NextLanguage } from '../i18n';
 
 function AppInner() {
   const [budgetId] = useMetadataPref('id');
@@ -119,6 +120,7 @@ function AppInner() {
     }
 
     async function initAll() {
+      setI18NextLanguage('pt-BR');
       await Promise.all([installPolyfills(), init()]);
       dispatch(setAppState({ loadingText: null }));
     }
