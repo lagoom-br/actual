@@ -3,8 +3,6 @@ import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 
-import * as Platform from 'loot-core/client/platform';
-
 const languages = import.meta.glob(['/locale/*.json', '!/locale/*_old.json']);
 
 export const availableLanguages = Object.keys(languages).map(
@@ -43,14 +41,12 @@ i18n
 export const setI18NextLanguage = (language: string) => {
   if (!language) {
     // System default
-    setI18NextLanguage(
-      Platform.isPlaywright ? 'cimode' : navigator.language || 'en',
-    );
+    setI18NextLanguage('pt-BR');
     return;
   }
 
   if (!isLanguageAvailable(language)) {
-    if (language === 'en') {
+    if (language === 'pt-BR') {
       // English is always available since we use natural-language keys.
       return;
     }
@@ -72,8 +68,8 @@ export const setI18NextLanguage = (language: string) => {
     }
 
     // Fall back to English
-    console.error(`Unknown locale ${language}, falling back to en`);
-    setI18NextLanguage('en');
+    console.error(`Unknown locale ${language}, falling back to pt-BR`);
+    setI18NextLanguage('pt-BR');
     return;
   }
 
@@ -81,5 +77,9 @@ export const setI18NextLanguage = (language: string) => {
     return; // language is already set
   }
 
-  i18n.changeLanguage(language || 'en');
+  if (language === i18n.language) {
+    return; // language is already set
+  }
+
+  i18n.changeLanguage(language || 'pt-BR');
 };
