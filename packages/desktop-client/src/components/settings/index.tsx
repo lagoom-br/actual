@@ -36,6 +36,8 @@ import { RepairTransactions } from './RepairTransactions';
 import { ResetCache, ResetSync } from './Reset';
 import { ThemeSettings } from './Themes';
 import { AdvancedToggle, Setting } from './UI';
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 
 function About() {
   const version = useServerVersion();
@@ -141,6 +143,7 @@ function AdvancedAbout() {
 }
 
 export function Settings() {
+  const { hasPermission } = useAuth();
   const { t } = useTranslation();
   const [floatingSidebar] = useGlobalPref('floatingSidebar');
   const [budgetName] = useMetadataPref('budgetName');
@@ -199,19 +202,23 @@ export function Settings() {
         <About />
         <ThemeSettings />
         <FormatSettings />
-        <LanguageSettings />
+        {hasPermission(Permissions.ADMINISTRATOR) && 
+          <LanguageSettings />
+        }
         <AuthSettings />
         <EncryptionSettings />
         <BudgetTypeSettings />
         {isElectron() && <Backups />}
         <ExportBudget />
-        <AdvancedToggle>
-          <AdvancedAbout />
-          <ResetCache />
-          <ResetSync />
-          <RepairTransactions />
-          <ExperimentalFeatures />
-        </AdvancedToggle>
+        {hasPermission(Permissions.ADMINISTRATOR) && (
+          <AdvancedToggle>
+            <AdvancedAbout />
+            <ResetCache />
+            <ResetSync />
+            <RepairTransactions />
+            <ExperimentalFeatures />
+          </AdvancedToggle>
+        )}
       </View>
     </Page>
   );
