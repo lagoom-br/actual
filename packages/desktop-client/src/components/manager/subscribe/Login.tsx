@@ -20,7 +20,11 @@ import { Select } from '../../common/Select';
 import { Text } from '../../common/Text';
 import { View } from '../../common/View';
 import { useResponsive } from '../../responsive/ResponsiveProvider';
-import { useAvailableLoginMethods, useLoginMethod } from '../../ServerContext';
+import {
+  useAutoLogin,
+  useAvailableLoginMethods,
+  useLoginMethod,
+} from '../../ServerContext';
 
 import { useBootstrapped, Title } from './common';
 import { OpenIdForm } from './OpenIdForm';
@@ -101,22 +105,11 @@ function OpenIdLogin({ setError }) {
   }, []);
 
   async function onSubmitOpenId() {
-    const { error, redirect_url } = await send('subscribe-sign-in', {
-      return_url: isElectron()
-        ? await window.Actual.startOAuthServer()
-        : window.location.origin,
-      loginMethod: 'openid',
-    });
-
-    if (error) {
-      setError(error);
-    } else {
-      if (isElectron()) {
-        window.Actual?.openURLInBrowser(redirect_url);
-      } else {
-        window.location.href = redirect_url;
+    callOpenIdRedirectURL().then(error => {
+      if (error) {
+        setError(error);
       }
-    }
+    });
   }
 
   return (
@@ -207,6 +200,27 @@ function HeaderLogin({ error }) {
   );
 }
 
+async function callOpenIdRedirectURL() {
+  const { error, redirect_url } = await send('subscribe-sign-in', {
+    return_url: isElectron()
+      ? await window.Actual.startOAuthServer()
+      : window.location.origin,
+    loginMethod: 'openid',
+  });
+
+  if (!error) {
+    if (isElectron()) {
+      window.Actual?.openURLInBrowser(redirect_url);
+    } else {
+      window.location.href = redirect_url;
+    }
+
+    return '';
+  } else {
+    return error;
+  }
+}
+
 export function Login() {
   const { t } = useTranslation();
 
@@ -217,6 +231,14 @@ export function Login() {
   const [error, setError] = useState(null);
   const { checked } = useBootstrapped();
   const loginMethods = useAvailableLoginMethods();
+  const autoLogin = useAutoLogin();
+  const [masterCreated, setMasterCreated] = useState(false);
+
+  useEffect(() => {
+    if (loginMethods.some(method => method.method === 'openid')) {
+      send('owner-created').then(created => setMasterCreated(created));
+    }
+  }, [loginMethods]);
 
   useEffect(() => {
     if (checked && !searchParams.has('error')) {
@@ -237,6 +259,17 @@ export function Login() {
       })();
     }
   }, [loginMethods, checked, searchParams, method, dispatch]);
+
+  useEffect(() => {
+    if (
+      checked &&
+      autoLogin &&
+      loginMethods.some(method => method.method === 'openid') &&
+      masterCreated
+    ) {
+      callOpenIdRedirectURL();
+    }
+  }, [checked, autoLogin, loginMethods, masterCreated]);
 
   function getErrorMessage(error) {
     switch (error) {
@@ -259,7 +292,11 @@ export function Login() {
     return null;
   }
 
-  return (
+  return autoLogin &&
+    masterCreated &&
+    loginMethods.some(method => method.method === 'openid') ? (
+    <div />
+  ) : (
     <View style={{ maxWidth: 450, marginTop: -30, color: theme.pageText }}>
       <Title text={t('Sign in to this Actual instance')} />
 
