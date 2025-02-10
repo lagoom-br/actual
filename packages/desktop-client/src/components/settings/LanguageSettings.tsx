@@ -11,6 +11,8 @@ import { Select, type SelectOption } from '../common/Select';
 import { Text } from '../common/Text';
 
 import { Setting } from './UI';
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 
 const languageOptions = (t: TFunction): SelectOption[] =>
   [
@@ -29,8 +31,9 @@ export function LanguageSettings() {
   const { t } = useTranslation();
   const [language, setLanguage] = useGlobalPref('language');
   const isEnabled = !!availableLanguages.length;
+  const { hasPermission } = useAuth();
 
-  return (
+  return hasPermission(Permissions.ADMINISTRATOR) ? (
     <Setting
       primaryAction={
         <Select
@@ -59,7 +62,7 @@ export function LanguageSettings() {
               variant="external"
               to={
                 'https://hosted.weblate.org/projects/actualbudget/actual/' +
-                language
+                (language ?? '')
               }
               linkColor="purple"
             >
@@ -82,5 +85,5 @@ export function LanguageSettings() {
         )}
       </Text>
     </Setting>
-  );
+  ) : <></>;
 }
