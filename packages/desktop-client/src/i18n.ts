@@ -73,5 +73,13 @@ export const setI18NextLanguage = (language: string) => {
     return;
   }
 
+  if (language === i18n.language) {
+    return; // language is already set
+  }
+
+  if (language === i18n.language) {
+    return; // language is already set
+  }
+
   i18n.changeLanguage(language || 'pt-BR');
 };
