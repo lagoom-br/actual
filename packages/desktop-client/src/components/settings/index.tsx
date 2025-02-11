@@ -51,7 +51,17 @@ function About() {
         <Trans>
           <strong>Actual</strong> is a super fast privacy-focused app for
           managing your finances.
-        </Trans>
+        </Trans>{' '}
+        Baseado no projeto de código aberto{' '}
+        <Link
+          variant="external"
+          linkColor="purple"
+          to="https://actualbudget.org"
+        >
+          Actual Budget
+        </Link>{' '}
+        sob a licença MIT, ele vai te ajudar a colocar o método Fiwell em
+        prática e sair da bagunça financeira de uma vez por todas.
       </Text>
       {hasPermission(Permissions.ADMINISTRATOR) && (
         <View
