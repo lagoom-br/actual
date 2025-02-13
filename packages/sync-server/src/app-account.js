@@ -9,8 +9,8 @@ import {
   getActiveLoginMethod,
 } from './account-db.js';
 import { isValidRedirectUrl, loginWithOpenIdSetup } from './accounts/openid.js';
-import finalConfig from './load-config.js';
 import { changePassword, loginWithPassword } from './accounts/password.js';
+import finalConfig from './load-config.js';
 import {
   errorMiddleware,
   requestLoggerMiddleware,
