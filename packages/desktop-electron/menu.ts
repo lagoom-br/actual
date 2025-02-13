@@ -192,17 +192,17 @@ export function getMenu(
             }
           },
         },
-        {
-          label: 'Community Support (Discord)',
-          click(_menuItem, focusedWin) {
-            if (focusedWin) {
-              const browserWindow = focusedWin as BrowserWindow;
-              browserWindow.webContents.executeJavaScript(
-                'window.open("https://discord.gg/pRYNYr4W5A", "_blank")',
-              );
-            }
-          },
-        },
+        // {
+        //   label: 'Community Support (Discord)',
+        //   click(_menuItem, focusedWin) {
+        //     if (focusedWin) {
+        //      const browserWindow = focusedWin as BrowserWindow;
+        //      browserWindow.webContents.executeJavaScript(
+        //       'window.open("https://discord.gg/pRYNYr4W5A", "_blank")',
+        //     );
+        //     }
+        //   },
+        // },
         {
           label: 'Keyboard Shortcuts',
           accelerator: '?',

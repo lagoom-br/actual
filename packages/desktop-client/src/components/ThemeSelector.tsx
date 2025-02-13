@@ -31,8 +31,8 @@ export function ThemeSelector({ style }: ThemeSelectorProps) {
     light: SvgSun,
     dark: SvgMoonStars,
     auto: SvgSystem,
-    midnight: SvgMoonStars,
-    development: SvgMoonStars,
+    // midnight: SvgMoonStars,
+    // development: SvgMoonStars,
   } as const;
 
   function onMenuSelect(newTheme: Theme) {
@@ -40,7 +40,7 @@ export function ThemeSelector({ style }: ThemeSelectorProps) {
     switchTheme(newTheme);
   }
 
-  const Icon = themeIcons[theme] || SvgSun;
+  const Icon = themeIcons[theme as keyof typeof themeIcons] || SvgSun;
 
   if (isNarrowWidth) {
     return null;

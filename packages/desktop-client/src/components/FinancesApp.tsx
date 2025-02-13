@@ -1,6 +1,6 @@
 // @ts-strict-ignore
 import React, { type ReactElement, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { Route, Routes, Navigate, useLocation, useHref } from 'react-router';
 
 import { useResponsive } from '@actual-app/components/hooks/useResponsive';
@@ -28,16 +28,18 @@ import { FloatableSidebar } from './sidebar';
 import { ManageTagsPage } from './tags/ManageTagsPage';
 import { Titlebar } from './Titlebar';
 
-import { getLatestAppVersion, sync } from '@desktop-client/app/appSlice';
+//import { getLatestAppVersion, sync } from '@desktop-client/app/appSlice';
+import { sync } from '@desktop-client/app/appSlice';
 import { ProtectedRoute } from '@desktop-client/auth/ProtectedRoute';
 import { Permissions } from '@desktop-client/auth/types';
 import { useAccounts } from '@desktop-client/hooks/useAccounts';
-import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
-import { useLocalPref } from '@desktop-client/hooks/useLocalPref';
+// import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
+// import { useLocalPref } from '@desktop-client/hooks/useLocalPref';
 import { useMetaThemeColor } from '@desktop-client/hooks/useMetaThemeColor';
 import { useNavigate } from '@desktop-client/hooks/useNavigate';
-import { addNotification } from '@desktop-client/notifications/notificationsSlice';
+// import { addNotification } from '@desktop-client/notifications/notificationsSlice';
 import { useSelector, useDispatch } from '@desktop-client/redux';
+// import { getIsOutdated, getLatestVersion } from '@desktop-client/util/versions';
 
 function NarrowNotSupported({
   redirectTo = '/budget',
@@ -82,18 +84,18 @@ export function FinancesApp() {
   useMetaThemeColor(isNarrowWidth ? theme.mobileViewTheme : null);
 
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const accounts = useAccounts();
   const isAccountsLoaded = useSelector(state => state.account.isAccountsLoaded);
 
-  const versionInfo = useSelector(state => state.app.versionInfo);
-  const [notifyWhenUpdateIsAvailable] = useGlobalPref(
-    'notifyWhenUpdateIsAvailable',
-  );
-  const [lastUsedVersion, setLastUsedVersion] = useLocalPref(
-    'flags.updateNotificationShownForVersion',
-  );
+  //const versionInfo = useSelector(state => state.app.versionInfo);
+  // const [notifyWhenUpdateIsAvailable] = useGlobalPref(
+  //   'notifyWhenUpdateIsAvailable',
+  // );
+  // const [lastUsedVersion, setLastUsedVersion] = useLocalPref(
+  //   'flags.updateNotificationShownForVersion',
+  // );
 
   const multiuserEnabled = useMultiuserEnabled();
 
@@ -108,79 +110,74 @@ export function FinancesApp() {
   useEffect(() => {
     async function run() {
       await global.Actual.waitForUpdateReadyForDownload(); // This will only resolve when an update is ready
-      dispatch(
-        addNotification({
-          notification: {
-            type: 'message',
-            title: t('A new version of Actual is available!'),
-            message: t(
-              'Click the button below to reload and apply the update.',
-            ),
-            sticky: true,
-            id: 'update-reload-notification',
-            button: {
-              title: t('Update now'),
-              action: async () => {
-                await global.Actual.applyAppUpdate();
-              },
-            },
-          },
-        }),
-      );
+      // dispatch(
+      //   addNotification({
+      //     notification: {
+      //       type: 'message',
+      //       title: t('A new version of Actual is available!'),
+      //       message: t(
+      //         'Click the button below to reload and apply the update.',
+      //       ),
+      //       sticky: true,
+      //       id: 'update-reload-notification',
+      //       button: {
+      //         title: t('Update now'),
+      //         action: async () => {
+      //           await global.Actual.applyAppUpdate();
+      //         },
+      //       },
+      //     },
+      //   }),
+      // );
     }
 
     run();
   }, []);
 
-  useEffect(() => {
-    dispatch(getLatestAppVersion());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (notifyWhenUpdateIsAvailable && versionInfo) {
-      if (
-        versionInfo.isOutdated &&
-        lastUsedVersion !== versionInfo.latestVersion
-      ) {
-        dispatch(
-          addNotification({
-            notification: {
-              type: 'message',
-              title: t('A new version of Actual is available!'),
-              message:
-                (process.env.REACT_APP_IS_PIKAPODS ?? '').toLowerCase() ===
-                'true'
-                  ? t(
-                      'A new version of Actual is available! Your Pikapods instance will be automatically updated in the next few days - no action needed.',
-                    )
-                  : t(
-                      'Version {{latestVersion}} of Actual was recently released.',
-                      { latestVersion: versionInfo.latestVersion },
-                    ),
-              sticky: true,
-              id: 'update-notification',
-              button: {
-                title: t('Open changelog'),
-                action: () => {
-                  window.open('https://actualbudget.org/docs/releases');
-                },
-              },
-              onClose: () => {
-                setLastUsedVersion(versionInfo.latestVersion);
-              },
-            },
-          }),
-        );
-      }
-    }
-  }, [
-    dispatch,
-    lastUsedVersion,
-    notifyWhenUpdateIsAvailable,
-    setLastUsedVersion,
-    t,
-    versionInfo,
-  ]);
+  // useEffect(() => {
+  //   //async function run() {
+  //     // const latestVersion = await getLatestVersion();
+  //     // const isOutdated = await getIsOutdated(latestVersion);
+  //     // if (isOutdated && lastUsedVersion !== latestVersion) {
+  //     //   dispatch(
+  //     //     addNotification({
+  //     //       notification: {
+  //     //         type: 'message',
+  //     //         title: t('A new version of Actual is available!'),
+  //     //         message:
+  //     //           (process.env.REACT_APP_IS_PIKAPODS ?? '').toLowerCase() ===
+  //     //           'true'
+  //     //             ? t(
+  //     //                 'A new version of Actual is available! Your Pikapods instance will be automatically updated in the next few days - no action needed.',
+  //     //               )
+  //     //             : t(
+  //     //                 'Version {{latestVersion}} of Actual was recently released.',
+  //     //                 { latestVersion },
+  //     //               ),
+  //     //         sticky: true,
+  //     //         id: 'update-notification',
+  //     //         button: {
+  //     //           title: t('Open changelog'),
+  //     //           action: () => {
+  //     //             window.open('https://actualbudget.org/docs/releases');
+  //     //           },
+  //     //         },
+  //     //         onClose: () => {
+  //     //           setLastUsedVersion(latestVersion);
+  //     //         },
+  //     //       },
+  //     //     }),
+  //     //   );
+  //     // }
+  //   //}
+  // }, [
+  //   dispatch,
+  //   lastUsedVersion,
+  //   notifyWhenUpdateIsAvailable,
+  //   setLastUsedVersion,
+  //   // t,
+  //   versionInfo,
+  // ]);
 
   const scrollableRef = useRef<HTMLDivElement>(null);
 

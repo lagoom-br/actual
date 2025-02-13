@@ -4,10 +4,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Menu } from '@actual-app/components/menu';
 import { Select, type SelectOption } from '@actual-app/components/select';
 import { Text } from '@actual-app/components/text';
+import { View } from '@actual-app/components/view';
 import { type TFunction } from 'i18next';
 
 import { Setting } from './UI';
 
+import { useAuth } from '@desktop-client/auth/AuthProvider';
+import { Permissions } from '@desktop-client/auth/types';
 import { Link } from '@desktop-client/components/common/Link';
 import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
 import { availableLanguages, setI18NextLanguage } from '@desktop-client/i18n';
@@ -35,8 +38,9 @@ export function LanguageSettings() {
   const { t } = useTranslation();
   const [language, setLanguage] = useGlobalPref('language');
   const isEnabled = !!availableLanguages.length;
+  const { hasPermission } = useAuth();
 
-  return (
+  return hasPermission(Permissions.ADMINISTRATOR) ? (
     <Setting
       primaryAction={
         <Select
@@ -88,5 +92,7 @@ export function LanguageSettings() {
         )}
       </Text>
     </Setting>
+  ) : (
+    <View />
   );
 }

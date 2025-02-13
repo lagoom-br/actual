@@ -15,7 +15,11 @@ import { type RemoteFile, type SyncedLocalFile } from 'loot-core/types/file';
 import { type TransObjectLiteral } from 'loot-core/types/util';
 
 import { PrivacyFilter } from './PrivacyFilter';
-import { useMultiuserEnabled, useServerURL } from './ServerContext';
+import {
+  useMultiuserEnabled,
+  useServerURL,
+  useLoginMethod,
+} from './ServerContext';
 
 import { useAuth } from '@desktop-client/auth/AuthProvider';
 import { Permissions } from '@desktop-client/auth/types';
@@ -49,6 +53,7 @@ export function LoggedInUser({
   const location = useLocation();
   const { hasPermission } = useAuth();
   const multiuserEnabled = useMultiuserEnabled();
+  const currentLoginMethod = useLoginMethod();
   const allFiles = useSelector(state => state.budgetfiles.allFiles || []);
   const remoteFiles = allFiles.filter(
     f => f.state === 'remote' || f.state === 'synced' || f.state === 'detached',
@@ -121,7 +126,7 @@ export function LoggedInUser({
         navigate('/');
         break;
       case 'sign-out':
-        dispatch(signOut());
+        dispatch(signOut(currentLoginMethod === 'openid'));
         break;
       case 'config-server':
         await onCloseBudget();
@@ -180,10 +185,13 @@ export function LoggedInUser({
     if (serverUrl) {
       baseMenu.push({ name: 'sign-out', text: t('Sign out') });
     }
-    baseMenu.push({
-      name: 'config-server',
-      text: serverUrl ? t('Change server URL') : t('Start using a server'),
-    });
+
+    if (hasPermission(Permissions.ADMINISTRATOR)) {
+      baseMenu.push({
+        name: 'config-server',
+        text: serverUrl ? t('Change server URL') : t('Start using a server'),
+      });
+    }
 
     const adminMenu: (MenuItem | typeof Menu.line)[] = [];
     if (multiuserEnabled && isAdmin) {
@@ -200,6 +208,7 @@ export function LoggedInUser({
 
     if (
       multiuserEnabled &&
+      isAdmin &&
       ((currentFile && userData && currentFile.owner === userData.userId) ||
         isAdmin) &&
       serverUrl &&

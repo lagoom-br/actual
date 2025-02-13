@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import React, { useEffect, type ReactNode } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
 import { Select } from '@actual-app/components/select';
@@ -8,7 +8,8 @@ import { tokens } from '@actual-app/components/tokens';
 import { View } from '@actual-app/components/view';
 import { css } from '@emotion/css';
 
-import { type DarkTheme, type Theme } from 'loot-core/types/prefs';
+// import { type DarkTheme, type Theme } from 'loot-core/types/prefs';
+import { type Theme } from 'loot-core/types/prefs';
 
 import { Column, Setting } from './UI';
 
@@ -16,15 +17,22 @@ import { useSidebar } from '@desktop-client/components/sidebar/SidebarProvider';
 import {
   themeOptions,
   useTheme,
-  usePreferredDarkTheme,
-  darkThemeOptions,
+  // usePreferredDarkTheme,
+  // darkThemeOptions,
 } from '@desktop-client/style';
 
 export function ThemeSettings() {
   const { t } = useTranslation();
   const sidebar = useSidebar();
   const [theme, switchTheme] = useTheme();
-  const [darkTheme, switchDarkTheme] = usePreferredDarkTheme();
+
+  //forcing theme to light if auto
+  useEffect(() => {
+    if (theme === 'auto') {
+      switchTheme('light');
+    }
+  }, [theme, switchTheme]);
+  // const [darkTheme, switchDarkTheme] = usePreferredDarkTheme();
 
   return (
     <Setting
@@ -57,7 +65,7 @@ export function ThemeSettings() {
               })}
             />
           </Column>
-          {theme === 'auto' && (
+          {/* {theme === 'auto' && (
             <Column title={t('Dark theme')}>
               <Select<DarkTheme>
                 onChange={value => {
@@ -72,7 +80,7 @@ export function ThemeSettings() {
                 })}
               />
             </Column>
-          )}
+          )} */}
         </View>
       }
     >

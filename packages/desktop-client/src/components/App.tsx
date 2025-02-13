@@ -81,7 +81,8 @@ function AppInner() {
       dispatch(
         setAppState({
           loadingText: t(
-            'Initializing the connection to the local database...',
+            // 'Initializing the connection to the local database...',
+            'Inicializando a conexão com o banco de dados local...',
           ),
         }),
       );
@@ -126,6 +127,7 @@ function AppInner() {
     }
 
     async function initAll() {
+      setI18NextLanguage('pt-BR');
       await Promise.all([installPolyfills(), init()]);
       dispatch(setAppState({ loadingText: null }));
     }
@@ -152,7 +154,7 @@ function AppInner() {
             button: {
               title: t('Go to login'),
               action: () => {
-                dispatch(signOut());
+                dispatch(signOut(true));
               },
             },
           },

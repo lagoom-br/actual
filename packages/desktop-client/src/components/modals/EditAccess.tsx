@@ -18,6 +18,7 @@ import {
   ModalHeader,
 } from '@desktop-client/components/common/Modal';
 import { FormField, FormLabel } from '@desktop-client/components/forms';
+import { useLoginMethod } from '@desktop-client/components/ServerContext';
 import {
   type Modal as ModalType,
   popModal,
@@ -37,6 +38,7 @@ export function EditUserAccess({
 }: EditUserAccessProps) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const currentLoginMethod = useLoginMethod();
 
   const [userId, setUserId] = useState(defaultUserAccess.userId ?? '');
   const [error, setSetError] = useState('');
@@ -82,7 +84,7 @@ export function EditUserAccess({
               button: {
                 title: t('Go to login'),
                 action: () => {
-                  dispatch(signOut());
+                  dispatch(signOut(currentLoginMethod === 'openid'));
                 },
               },
             },

@@ -6,7 +6,7 @@ cd "$ROOT/.."
 
 echo "Updating translations..."
 if ! [ -d packages/desktop-client/locale ]; then
-    git clone https://github.com/actualbudget/translations packages/desktop-client/locale
+    git clone https://github.com/lagoom-br/translations.git packages/desktop-client/locale
 fi
 pushd packages/desktop-client/locale > /dev/null
 git checkout .

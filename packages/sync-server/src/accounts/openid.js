@@ -280,7 +280,7 @@ export async function loginWithOpenIdFinalize(body) {
             ) || {};
 
           if (userIdFromDb == null) {
-            throw new Error('openid-grant-failed');
+            return { url: `https://fiwell.com.br/usuario-nao-autorizado/` };
           }
 
           if (!displayName && userInfo.name) {
@@ -297,10 +297,20 @@ export async function loginWithOpenIdFinalize(body) {
       if (error.message === 'user-already-exists') {
         return { error: 'user-already-exists' };
       } else if (error.message === 'openid-grant-failed') {
-        return { error: 'openid-grant-failed' };
+        return {
+          url: `https://fiwell.com.br/usuario-nao-autorizado/`,
+          error: '401',
+        };
       } else {
         throw error; // Re-throw other unexpected errors
       }
+    }
+
+    if (userId === null) {
+      return {
+        url: `https://fiwell.com.br/usuario-nao-autorizado/`,
+        error: '401',
+      };
     }
 
     const token = uuidv4();
@@ -327,7 +337,10 @@ export async function loginWithOpenIdFinalize(body) {
     return { url: `${return_url}/openid-cb?token=${token}` };
   } catch (err) {
     console.error('OpenID grant failed:', err);
-    return { error: 'openid-grant-failed' };
+    return {
+      url: `https://fiwell.com.br/usuario-nao-autorizado/`,
+      error: '401',
+    };
   }
 }
 
@@ -369,4 +382,42 @@ export function isValidRedirectUrl(url) {
   } catch (err) {
     return false;
   }
+}
+
+export async function loginOutOpenIdProvider(query) {
+  if (!query.returnUrl) {
+    return { error: 'return-url-missing' };
+  }
+  if (!isValidRedirectUrl(query.returnUrl)) {
+    return { error: 'invalid-return-url' };
+  }
+
+  const accountDb = getAccountDb();
+  let config = accountDb.first('SELECT extra_data FROM auth WHERE method = ?', [
+    'openid',
+  ]);
+  if (!config) {
+    return { error: 'openid-not-configured' };
+  }
+
+  try {
+    config = JSON.parse(config['extra_data']);
+  } catch (err) {
+    console.error('Error parsing OpenID configuration:', err);
+    return { error: 'openid-setup-failed' };
+  }
+
+  let client;
+  try {
+    client = await setupOpenIdClient(config);
+  } catch (err) {
+    console.error('Error setting up OpenID client:', err);
+    return { error: 'openid-setup-failed' };
+  }
+
+  const endSessionUrl = client.endSessionUrl({
+    post_logout_redirect_uri: query.returnUrl,
+  });
+
+  return { url: endSessionUrl };
 }
