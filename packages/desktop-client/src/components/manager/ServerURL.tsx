@@ -4,10 +4,13 @@ import { Trans } from 'react-i18next';
 import { Text } from '@actual-app/components/text';
 import { View } from '@actual-app/components/view';
 
+import { useAuth } from '@desktop-client/auth/AuthProvider';
+import { Permissions } from '@desktop-client/auth/types';
 import { Link } from '@desktop-client/components/common/Link';
 import { useServerURL } from '@desktop-client/components/ServerContext';
 
 export function ServerURL() {
+  const { hasPermission } = useAuth();
   const url = useServerURL();
 
   return (
@@ -34,9 +37,11 @@ export function ServerURL() {
           </Trans>
         )}
       </Text>
-      <Link variant="internal" to="/config-server" style={{ marginLeft: 15 }}>
-        <Trans>Change</Trans>
-      </Link>
+      {hasPermission(Permissions.ADMINISTRATOR) && (
+        <Link variant="internal" to="/config-server" style={{ marginLeft: 15 }}>
+          <Trans>Change</Trans>
+        </Link>
+      )}
     </View>
   );
 }

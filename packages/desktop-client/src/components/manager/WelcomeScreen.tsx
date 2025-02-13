@@ -8,6 +8,8 @@ import { Text } from '@actual-app/components/text';
 import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 
+import { useAuth } from '@desktop-client/auth/AuthProvider';
+import { Permissions } from '@desktop-client/auth/types';
 import { createBudget } from '@desktop-client/budgetfiles/budgetfilesSlice';
 import { Link } from '@desktop-client/components/common/Link';
 import { pushModal } from '@desktop-client/modals/modalsSlice';
@@ -16,6 +18,7 @@ import { useDispatch } from '@desktop-client/redux';
 export function WelcomeScreen() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const { hasPermission } = useAuth();
 
   return (
     <View
@@ -64,14 +67,16 @@ export function WelcomeScreen() {
             topics.
           </Trans>
         </Paragraph>
-        <Paragraph style={{ color: theme.pageTextLight }}>
-          <Trans>
-            Get started by importing an existing budget file from Actual or
-            another budgeting app, create a demo budget file, or start fresh
-            with an empty budget. You can always create or import another budget
-            later.
-          </Trans>
-        </Paragraph>
+        {hasPermission(Permissions.ADMINISTRATOR) && (
+          <Paragraph style={{ color: theme.pageTextLight }}>
+            <Trans>
+              Get started by importing an existing budget file from Actual or
+              another budgeting app, create a demo budget file, or start fresh
+              with an empty budget. You can always create or import another
+              budget later.
+            </Trans>
+          </Paragraph>
+        )}
       </View>
       <View
         style={{
@@ -81,11 +86,13 @@ export function WelcomeScreen() {
           flexShrink: 0,
         }}
       >
-        <Button
-          onPress={() => dispatch(pushModal({ modal: { name: 'import' } }))}
-        >
-          <Trans>Import my budget</Trans>
-        </Button>
+        {hasPermission(Permissions.ADMINISTRATOR) && (
+          <Button
+            onPress={() => dispatch(pushModal({ modal: { name: 'import' } }))}
+          >
+            <Trans>Import my budget</Trans>
+          </Button>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -93,9 +100,11 @@ export function WelcomeScreen() {
             gap: 10,
           }}
         >
-          <Button onPress={() => dispatch(createBudget({ testMode: true }))}>
-            <Trans>View demo</Trans>
-          </Button>
+          {hasPermission(Permissions.ADMINISTRATOR) && (
+            <Button onPress={() => dispatch(createBudget({ testMode: true }))}>
+              <Trans>View demo</Trans>
+            </Button>
+          )}
           <Button
             variant="primary"
             autoFocus

@@ -257,6 +257,13 @@ const configSchema = convict({
     default: 'manual',
     env: 'ACTUAL_USER_CREATION_MODE',
   },
+
+  autoLogin: {
+    doc: 'Automatically log in the user if they are already authenticated.',
+    format: Boolean,
+    default: false,
+    env: 'ACTUAL_OPENID_AUTO_LOGIN',
+  },
 });
 
 let configPath = null;

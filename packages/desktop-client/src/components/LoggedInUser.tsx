@@ -121,7 +121,7 @@ export function LoggedInUser({
         navigate('/');
         break;
       case 'sign-out':
-        dispatch(signOut());
+        dispatch(signOut(multiuserEnabled));
         break;
       case 'config-server':
         await onCloseBudget();
@@ -180,10 +180,13 @@ export function LoggedInUser({
     if (serverUrl) {
       baseMenu.push({ name: 'sign-out', text: t('Sign out') });
     }
-    baseMenu.push({
-      name: 'config-server',
-      text: serverUrl ? t('Change server URL') : t('Start using a server'),
-    });
+
+    if (hasPermission(Permissions.ADMINISTRATOR)) {
+      baseMenu.push({
+        name: 'config-server',
+        text: serverUrl ? t('Change server URL') : t('Start using a server'),
+      });
+    }
 
     const adminMenu: (MenuItem | typeof Menu.line)[] = [];
     if (multiuserEnabled && isAdmin) {
@@ -200,6 +203,7 @@ export function LoggedInUser({
 
     if (
       multiuserEnabled &&
+      isAdmin &&
       ((currentFile && userData && currentFile.owner === userData.userId) ||
         isAdmin) &&
       serverUrl &&

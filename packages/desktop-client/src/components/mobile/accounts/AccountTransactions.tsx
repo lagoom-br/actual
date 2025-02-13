@@ -47,7 +47,6 @@ function TransactionListWithPreviews({
   readonly account: AccountEntity;
 }) {
   const { t } = useTranslation();
-
   const baseTransactionsQuery = useCallback(
     () =>
       queries.transactions(account.id).options({ splits: 'all' }).select('*'),

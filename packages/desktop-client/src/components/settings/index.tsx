@@ -21,12 +21,14 @@ import { EncryptionSettings } from './Encryption';
 import { ExperimentalFeatures } from './Experimental';
 import { ExportBudget } from './Export';
 import { FormatSettings } from './Format';
-import { LanguageSettings } from './LanguageSettings';
+// import { LanguageSettings } from './LanguageSettings';
 import { RepairTransactions } from './RepairTransactions';
 import { ResetCache, ResetSync } from './Reset';
 import { ThemeSettings } from './Themes';
 import { AdvancedToggle, Setting } from './UI';
 
+import { useAuth } from '@desktop-client/auth/AuthProvider';
+import { Permissions } from '@desktop-client/auth/types';
 import { closeBudget } from '@desktop-client/budgetfiles/budgetfilesSlice';
 import { Link } from '@desktop-client/components/common/Link';
 import { FormField, FormLabel } from '@desktop-client/components/forms';
@@ -48,6 +50,7 @@ function About() {
   const version = useServerVersion();
   const latestVersion = useLatestVersion();
   const isOutdated = useIsOutdated();
+  const { hasPermission } = useAuth();
 
   return (
     <Setting>
@@ -55,55 +58,67 @@ function About() {
         <Trans>
           <strong>Actual</strong> is a super fast privacy-focused app for
           managing your finances.
-        </Trans>
+        </Trans>{' '}
+        <Trans>Baseado no projeto de código aberto</Trans>{' '}
+        <Link
+          variant="external"
+          linkColor="purple"
+          to="https://actualbudget.org"
+        >
+          <Trans>Actual Budget</Trans>
+        </Link>{' '}
+        sob a licença MIT, ele vai te ajudar a colocar o método Fiwell em
+        prática e sair da bagunça financeira de uma vez por todas.
       </Text>
-      <View
-        style={{
-          flexDirection: 'column',
-          gap: 10,
-        }}
-        className={css({
-          [`@media (min-width: ${tokens.breakpoint_small})`]: {
-            display: 'grid',
-            gridTemplateRows: '1fr 1fr',
-            gridTemplateColumns: '50% 50%',
-            columnGap: '2em',
-            gridAutoFlow: 'column',
-          },
-        })}
-        data-vrt-mask
-      >
-        <Text>
-          <Trans>
-            Client version: {{ version: `v${window.Actual?.ACTUAL_VERSION}` }}
-          </Trans>
-        </Text>
-        <Text>
-          <Trans>Server version: {{ version }}</Trans>
-        </Text>
-        {isOutdated ? (
-          <Link
-            variant="external"
-            to="https://actualbudget.org/docs/releases"
-            linkColor="purple"
-          >
-            <Trans>New version available: {{ latestVersion }}</Trans>
-          </Link>
-        ) : (
-          <Text style={{ color: theme.noticeText, fontWeight: 600 }}>
-            <Trans>You’re up to date!</Trans>
+      {hasPermission(Permissions.ADMINISTRATOR) && (
+        <View
+          style={{
+            flexDirection: 'column',
+            gap: 10,
+          }}
+          className={css({
+            [`@media (min-width: ${tokens.breakpoint_small})`]: {
+              display: 'grid',
+              gridTemplateRows: '1fr 1fr',
+              gridTemplateColumns: '50% 50%',
+              columnGap: '2em',
+              gridAutoFlow: 'column',
+            },
+          })}
+          data-vrt-mask
+        >
+          <Text>
+            <Trans>
+              Client version: {{ version: `v${window.Actual?.ACTUAL_VERSION}` }}
+            </Trans>
           </Text>
-        )}
-        <Text>
-          <Link
-            variant="external"
-            to="https://actualbudget.org/docs/releases"
-            linkColor="purple"
-          >
-            <Trans>Release Notes</Trans>
-          </Link>
-        </Text>
-      </View>
+          <Text>
+            <Trans>Server version: {{ version }}</Trans>
+          </Text>
+          {isOutdated ? (
+            <Link
+              variant="external"
+              to="https://actualbudget.org/docs/releases"
+              linkColor="purple"
+            >
+              <Trans>New version available: {{ latestVersion }}</Trans>
+            </Link>
+          ) : (
+            <Text style={{ color: theme.noticeText, fontWeight: 600 }}>
+              <Trans>You’re up to date!</Trans>
+            </Text>
+          )}
+          <Text>
+            <Link
+              variant="external"
+              to="https://actualbudget.org/docs/releases"
+              linkColor="purple"
+            >
+              <Trans>Release Notes</Trans>
+            </Link>
+          </Text>
+        </View>
+      )}
     </Setting>
   );
 }
@@ -149,6 +164,7 @@ function AdvancedAbout() {
 }
 
 export function Settings() {
+  const { hasPermission } = useAuth();
   const { t } = useTranslation();
   const [floatingSidebar] = useGlobalPref('floatingSidebar');
   const [budgetName] = useMetadataPref('budgetName');
@@ -213,22 +229,27 @@ export function Settings() {
           </View>
         )}
         <About />
-        <ThemeSettings />
-        <FormatSettings />
-        {isCurrencyExperimentalEnabled && <CurrencySettings />}
-        <LanguageSettings />
-        <AuthSettings />
+        {hasPermission(Permissions.ADMINISTRATOR) && (
+          <>
+            <ThemeSettings />
+            <FormatSettings />
+            {isCurrencyExperimentalEnabled && <CurrencySettings />}
+            <AuthSettings />
+          </>
+        )}
         <EncryptionSettings />
-        <BudgetTypeSettings />
+        {hasPermission(Permissions.ADMINISTRATOR) && <BudgetTypeSettings />}
         {isElectron() && <Backups />}
         <ExportBudget />
-        <AdvancedToggle>
-          <AdvancedAbout />
-          <ResetCache />
-          <ResetSync />
-          <RepairTransactions />
-          <ExperimentalFeatures />
-        </AdvancedToggle>
+        {hasPermission(Permissions.ADMINISTRATOR) && (
+          <AdvancedToggle>
+            <AdvancedAbout />
+            <ResetCache />
+            <ResetSync />
+            <RepairTransactions />
+            <ExperimentalFeatures />
+          </AdvancedToggle>
+        )}
       </View>
     </Page>
   );

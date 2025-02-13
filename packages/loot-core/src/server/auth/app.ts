@@ -19,6 +19,7 @@ export type AuthHandlers = {
   'enable-openid': typeof enableOpenId;
   'get-openid-config': typeof getOpenIdConfig;
   'enable-password': typeof enablePassword;
+  'subscribe-logout-openid': typeof logoutOpenid;
 };
 
 export const app = createApp<AuthHandlers>();
@@ -34,6 +35,7 @@ app.method('subscribe-set-token', setToken);
 app.method('enable-openid', enableOpenId);
 app.method('get-openid-config', getOpenIdConfig);
 app.method('enable-password', enablePassword);
+app.method('subscribe-logout-openid', logoutOpenid);
 
 async function didBootstrap() {
   return Boolean(await asyncStorage.getItem('did-bootstrap'));
@@ -73,6 +75,7 @@ async function needsBootstrap({ url }: { url?: string } = {}) {
         active: boolean;
       }>;
       multiuser: boolean;
+      autoLogin: boolean;
     };
   };
 
@@ -89,6 +92,7 @@ async function needsBootstrap({ url }: { url?: string } = {}) {
     ],
     multiuser: res.data.multiuser || false,
     hasServer: true,
+    autoLogin: res.data.autoLogin || false,
   };
 }
 
@@ -236,7 +240,7 @@ async function signIn(
         loginMethod?: string;
       }
     | {
-        returnUrl: string;
+        return_url: string;
         loginMethod?: 'openid';
       },
 ) {
@@ -248,7 +252,7 @@ async function signIn(
   }
   let res: {
     token?: string;
-    returnUrl?: string;
+    return_url?: string;
   };
 
   try {
@@ -267,8 +271,8 @@ async function signIn(
     throw err;
   }
 
-  if (res.returnUrl) {
-    return { redirectUrl: res.returnUrl };
+  if (res.return_url) {
+    return { return_url: res.return_url };
   }
 
   if (!res.token) {
@@ -288,6 +292,30 @@ async function signOut() {
     'readOnly',
   ]);
   return 'ok';
+}
+
+async function logoutOpenid({ returnUrl }: { returnUrl: string }) {
+  let res;
+
+  try {
+    const server = getServer();
+    if (!server) {
+      return { error: 'server-not-configured' };
+    }
+    res = JSON.parse(
+      await get(
+        server.BASE_SERVER + `/openid/logout?returnUrl=${returnUrl}`,
+      ),
+    );
+  } catch (err) {
+    return { error: (err as any)?.reason || 'network-failure' };
+  }
+
+  if (res.url) {
+    return { redirect_url: res.url };
+  }
+
+  return { error: 'unknown' };
 }
 
 async function setToken({ token }: { token: string }) {

@@ -343,7 +343,7 @@ export function ConfigServer() {
       setError(error);
     } else {
       setLoading(false);
-      await dispatch(signOut());
+      await dispatch(signOut(true));
       navigate('/');
     }
   }
