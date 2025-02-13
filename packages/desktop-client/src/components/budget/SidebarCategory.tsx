@@ -15,6 +15,7 @@ import {
   type CategoryEntity,
 } from 'loot-core/types/models';
 
+//import { CategoryAutomationButton } from './goals/CategoryAutomationButton';
 import { SidebarCategoryButtons } from './SidebarCategoryButtons';
 
 import { InputCell } from '@desktop-client/components/table';

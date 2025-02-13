@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { send } from 'loot-core/platform/client/fetch';
+import { isElectron } from 'loot-core/shared/environment';
 import { type Handlers } from 'loot-core/types/handlers';
 
 import { resetApp } from '@desktop-client/app/appSlice';
@@ -47,14 +48,34 @@ export const loggedIn = createAppAsyncThunk(
 
 export const signOut = createAppAsyncThunk(
   `${sliceName}/signOut`,
-  async (_, { dispatch }) => {
-    await send('subscribe-sign-out');
+  async (openidEnabled: boolean, { dispatch }) => {
+    if (openidEnabled && !isElectron()) {
+      // Get logout URL first while session is still valid
+      const response = await send('subscribe-logout-openid', {
+        returnUrl: `${window.location.origin}`,
+      });
 
-    dispatch(getUserData());
-    dispatch(loadGlobalPrefs());
-    dispatch(closeBudget());
-    // Handled in budgetSlice
-    // dispatch({ type: constants.SIGN_OUT });
+      if (response && response.url) {
+        // Clear local session before redirect
+        await send('subscribe-clear-session');
+        // Redirect to Auth0 logout
+        window.location.href = response.url;
+      } else {
+        // Clear local session if no OpenID logout URL
+        await send('subscribe-clear-session');
+        dispatch(getUserData());
+        dispatch(loadGlobalPrefs());
+        dispatch(closeBudget());
+      }
+    } else {
+      // Clear local session for non-OpenID logout
+      await send('subscribe-clear-session');
+      dispatch(getUserData());
+      dispatch(loadGlobalPrefs());
+      dispatch(closeBudget());
+      // Handled in budgetSlice
+      // dispatch({ type: constants.SIGN_OUT });
+    }
   },
 );
 

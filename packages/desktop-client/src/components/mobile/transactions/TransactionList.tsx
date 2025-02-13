@@ -410,9 +410,22 @@ function SelectedTransactionsFloatingActionBar({
           >
             <SvgDelete width={10} height={10} />
           </Button>
-          <Text style={styles.mediumText}>
+          {/* <Text style={styles.mediumText}>
             {selectedTransactions.size}{' '}
             {isMoreThanOne ? 'transactions' : 'transaction'} selected
+          </Text> */}
+          <Text style={styles.mediumText}>
+            {isMoreThanOne ? (
+              <>
+                <strong>{selectedTransactions.size}</strong> transações
+                selecionadas
+              </>
+            ) : (
+              <>
+                <strong>{selectedTransactions.size}</strong> transação
+                selecionada
+              </>
+            )}
           </Text>
         </View>
         <View

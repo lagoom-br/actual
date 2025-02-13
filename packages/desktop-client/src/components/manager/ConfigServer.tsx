@@ -22,6 +22,7 @@ import { Link } from '@desktop-client/components/common/Link';
 import {
   useServerURL,
   useSetServerURL,
+  useLoginMethod,
 } from '@desktop-client/components/ServerContext';
 import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
 import { useNavigate } from '@desktop-client/hooks/useNavigate';
@@ -293,6 +294,7 @@ export function ConfigServer() {
   const [url, setUrl] = useState('');
   const currentUrl = useServerURL();
   const setServerUrl = useSetServerURL();
+  const currentLoginMethod = useLoginMethod();
   useEffect(() => {
     setUrl(currentUrl);
   }, [currentUrl]);
@@ -343,7 +345,7 @@ export function ConfigServer() {
       setError(error);
     } else {
       setLoading(false);
-      await dispatch(signOut());
+      await dispatch(signOut(currentLoginMethod === 'openid'));
       navigate('/');
     }
   }

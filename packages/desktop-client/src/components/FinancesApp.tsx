@@ -36,9 +36,9 @@ import { useAccounts } from '@desktop-client/hooks/useAccounts';
 import { useLocalPref } from '@desktop-client/hooks/useLocalPref';
 import { useMetaThemeColor } from '@desktop-client/hooks/useMetaThemeColor';
 import { useNavigate } from '@desktop-client/hooks/useNavigate';
-import { addNotification } from '@desktop-client/notifications/notificationsSlice';
+// import { addNotification } from '@desktop-client/notifications/notificationsSlice';
 import { useSelector, useDispatch } from '@desktop-client/redux';
-import { getIsOutdated, getLatestVersion } from '@desktop-client/util/versions';
+// import { getIsOutdated, getLatestVersion } from '@desktop-client/util/versions';
 
 function NarrowNotSupported({
   redirectTo = '/budget',
@@ -83,7 +83,7 @@ export function FinancesApp() {
   useMetaThemeColor(isNarrowWidth ? theme.mobileViewTheme : null);
 
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const accounts = useAccounts();
   const isAccountsLoaded = useSelector(state => state.account.isAccountsLoaded);
@@ -105,25 +105,25 @@ export function FinancesApp() {
   useEffect(() => {
     async function run() {
       await global.Actual.waitForUpdateReadyForDownload();
-      dispatch(
-        addNotification({
-          notification: {
-            type: 'message',
-            title: t('A new version of Actual is available!'),
-            message: t(
-              'Click the button below to reload and apply the update.',
-            ),
-            sticky: true,
-            id: 'update-reload-notification',
-            button: {
-              title: t('Update now'),
-              action: async () => {
-                await global.Actual.applyAppUpdate();
-              },
-            },
-          },
-        }),
-      );
+      // dispatch(
+      //   addNotification({
+      //     notification: {
+      //       type: 'message',
+      //       title: t('A new version of Actual is available!'),
+      //       message: t(
+      //         'Click the button below to reload and apply the update.',
+      //       ),
+      //       sticky: true,
+      //       id: 'update-reload-notification',
+      //       button: {
+      //         title: t('Update now'),
+      //         action: async () => {
+      //           await global.Actual.applyAppUpdate();
+      //         },
+      //       },
+      //     },
+      //   }),
+      // );
     }
 
     run();
@@ -131,40 +131,39 @@ export function FinancesApp() {
 
   useEffect(() => {
     async function run() {
-      const latestVersion = await getLatestVersion();
-      const isOutdated = await getIsOutdated(latestVersion);
-
-      if (isOutdated && lastUsedVersion !== latestVersion) {
-        dispatch(
-          addNotification({
-            notification: {
-              type: 'message',
-              title: t('A new version of Actual is available!'),
-              message:
-                (process.env.REACT_APP_IS_PIKAPODS ?? '').toLowerCase() ===
-                'true'
-                  ? t(
-                      'A new version of Actual is available! Your Pikapods instance will be automatically updated in the next few days - no action needed.',
-                    )
-                  : t(
-                      'Version {{latestVersion}} of Actual was recently released.',
-                      { latestVersion },
-                    ),
-              sticky: true,
-              id: 'update-notification',
-              button: {
-                title: t('Open changelog'),
-                action: () => {
-                  window.open('https://actualbudget.org/docs/releases');
-                },
-              },
-              onClose: () => {
-                setLastUsedVersion(latestVersion);
-              },
-            },
-          }),
-        );
-      }
+      // const latestVersion = await getLatestVersion();
+      // const isOutdated = await getIsOutdated(latestVersion);
+      // if (isOutdated && lastUsedVersion !== latestVersion) {
+      //   dispatch(
+      //     addNotification({
+      //       notification: {
+      //         type: 'message',
+      //         title: t('A new version of Actual is available!'),
+      //         message:
+      //           (process.env.REACT_APP_IS_PIKAPODS ?? '').toLowerCase() ===
+      //           'true'
+      //             ? t(
+      //                 'A new version of Actual is available! Your Pikapods instance will be automatically updated in the next few days - no action needed.',
+      //               )
+      //             : t(
+      //                 'Version {{latestVersion}} of Actual was recently released.',
+      //                 { latestVersion },
+      //               ),
+      //         sticky: true,
+      //         id: 'update-notification',
+      //         button: {
+      //           title: t('Open changelog'),
+      //           action: () => {
+      //             window.open('https://actualbudget.org/docs/releases');
+      //           },
+      //         },
+      //         onClose: () => {
+      //           setLastUsedVersion(latestVersion);
+      //         },
+      //       },
+      //     }),
+      //   );
+      // }
     }
 
     run();

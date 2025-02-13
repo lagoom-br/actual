@@ -353,7 +353,7 @@ export function listenForSyncEvent(store: AppStore) {
             button: {
               title: 'Go to login',
               action: () => {
-                store.dispatch(signOut());
+                store.dispatch(signOut(true));
               },
             },
           };
