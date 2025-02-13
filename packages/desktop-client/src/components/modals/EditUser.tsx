@@ -24,6 +24,7 @@ import {
   FormField,
   FormLabel,
 } from '@desktop-client/components/forms';
+import { useLoginMethod } from '@desktop-client/components/ServerContext';
 import {
   popModal,
   type Modal as ModalType,
@@ -77,6 +78,7 @@ function useSaveUser() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { getUserDirectoryErrors } = useGetUserDirectoryErrors();
+  const currentLoginMethod = useLoginMethod();
 
   async function saveUser(
     method: 'user-add' | 'user-update',
@@ -104,7 +106,7 @@ function useSaveUser() {
               button: {
                 title: t('Go to login'),
                 action: () => {
-                  dispatch(signOut());
+                  dispatch(signOut(currentLoginMethod === 'openid'));
                 },
               },
             },

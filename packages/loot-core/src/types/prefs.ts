@@ -139,7 +139,6 @@ export type GlobalPrefsJson = Partial<{
   'user-token'?: string;
   'floating-sidebar'?: string; // "true" or "false"
   'max-months'?: string; // e.g. "2" or "3"
-  'category-expanded-state'?: string; // "0" or "1" or "2"
   'document-dir'?: GlobalPrefs['documentDir'];
   'encrypt-key'?: string;
   language?: GlobalPrefs['language'];
@@ -148,8 +147,9 @@ export type GlobalPrefsJson = Partial<{
   'installed-custom-theme'?: GlobalPrefs['installedCustomTheme'];
   plugins?: string; // "true" or "false"
   'plugin-theme'?: string; // JSON string of complete plugin theme (current selected plugin theme)
+  'category-expanded-state'?: string;
+  syncServerConfig?: string;
   'server-self-signed-cert'?: GlobalPrefs['serverSelfSignedCert'];
-  syncServerConfig?: GlobalPrefs['syncServerConfig'];
   notifyWhenUpdateIsAvailable?: GlobalPrefs['notifyWhenUpdateIsAvailable'];
 }>;
 

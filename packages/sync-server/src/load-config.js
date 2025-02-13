@@ -255,6 +255,12 @@ const configSchema = convict({
       default: 'openid',
       env: 'ACTUAL_OPENID_AUTH_METHOD',
     },
+    autoLogin: {
+      doc: 'Automatically log in the user if they are already authenticated.',
+      format: Boolean,
+      default: false,
+      env: 'ACTUAL_OPENID_AUTO_LOGIN',
+    },
   },
 
   token_expiration: {

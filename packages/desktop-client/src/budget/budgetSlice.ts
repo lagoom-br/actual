@@ -608,6 +608,7 @@ export const getCategoriesById = memoizeOne(
       group.categories?.forEach(cat => {
         res[cat.id] = cat;
       });
+      translateCategories(group.categories);
     });
 
     return res;

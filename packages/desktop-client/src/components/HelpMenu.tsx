@@ -14,28 +14,31 @@ import { useFeatureFlag } from '@desktop-client/hooks/useFeatureFlag';
 import { pushModal } from '@desktop-client/modals/modalsSlice';
 import { useDispatch } from '@desktop-client/redux';
 
-const getPageDocs = (page: string) => {
-  switch (page) {
-    case '/budget':
-      return 'https://actualbudget.org/docs/getting-started/envelope-budgeting';
-    case '/reports':
-      return 'https://actualbudget.org/docs/reports/';
-    case '/schedules':
-      return 'https://actualbudget.org/docs/schedules';
-    case '/payees':
-      return 'https://actualbudget.org/docs/transactions/payees';
-    case '/rules':
-      return 'https://actualbudget.org/docs/budgeting/rules';
-    case '/settings':
-      return 'https://actualbudget.org/docs/settings';
-    default:
-      // All pages under /accounts, plus any missing pages
-      return 'https://actualbudget.org/docs';
-  }
+//const getPageDocs = (page: string) => {
+const getPageDocs = () => {
+  return 'https://fiwell.notion.site/app';
+  // switch (page) {
+  //   case '/budget':
+  //     return 'https://actualbudget.org/docs/getting-started/envelope-budgeting';
+  //   case '/reports':
+  //     return 'https://actualbudget.org/docs/reports/';
+  //   case '/schedules':
+  //     return 'https://actualbudget.org/docs/schedules';
+  //   case '/payees':
+  //     return 'https://actualbudget.org/docs/transactions/payees';
+  //   case '/rules':
+  //     return 'https://actualbudget.org/docs/budgeting/rules';
+  //   case '/settings':
+  //     return 'https://actualbudget.org/docs/settings';
+  //   default:
+  //     // All pages under /accounts, plus any missing pages
+  //     return 'https://actualbudget.org/docs';
+  // }
 };
 
 function openDocsForCurrentPage() {
-  window.Actual.openURLInBrowser(getPageDocs(window.location.pathname));
+  //window.Actual.openURLInBrowser(getPageDocs(window.location.pathname));
+  window.Actual.openURLInBrowser(getPageDocs());
 }
 
 type HelpMenuItem =
@@ -122,10 +125,10 @@ export const HelpMenu = () => {
               name: 'docs',
               text: t('Documentation'),
             },
-            {
-              name: 'discord',
-              text: t('Community support (Discord)'),
-            },
+            // {
+            //   name: 'discord',
+            //   text: t('Community support (Discord)'),
+            // },
             { name: 'keyboard-shortcuts', text: t('Keyboard shortcuts') },
             ...(showGoalTemplates && page === '/budget'
               ? [{ name: 'goal-templates', text: t('Goal templates') }]

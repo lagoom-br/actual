@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { isNonProductionEnvironment } from 'loot-core/shared/environment';
+// import { isNonProductionEnvironment } from 'loot-core/shared/environment';
 import type { DarkTheme, Theme } from 'loot-core/types/prefs';
 
 import { parseInstalledTheme, validateThemeCss } from './customThemes';
 import * as darkTheme from './themes/dark';
-import * as developmentTheme from './themes/development';
+import type * as developmentTheme from './themes/development';
 import * as lightTheme from './themes/light';
-import * as midnightTheme from './themes/midnight';
+import type * as midnightTheme from './themes/midnight';
 
 import { useFeatureFlag } from '@desktop-client/hooks/useFeatureFlag';
 import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
@@ -15,11 +15,11 @@ import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
 const themes = {
   light: { name: 'Light', colors: lightTheme },
   dark: { name: 'Dark', colors: darkTheme },
-  midnight: { name: 'Midnight', colors: midnightTheme },
-  auto: { name: 'System default', colors: darkTheme },
-  ...(isNonProductionEnvironment() && {
-    development: { name: 'Development', colors: developmentTheme },
-  }),
+  // midnight: { name: 'Midnight', colors: midnightTheme },
+  // auto: { name: 'System default', colors: darkTheme },
+  // ...(isNonProductionEnvironment() && {
+  //   development: { name: 'Development', colors: developmentTheme },
+  //},
 } as const;
 
 type ThemeKey = keyof typeof themes;
@@ -30,11 +30,11 @@ export const themeOptions = Object.entries(themes).map(
 
 export const darkThemeOptions = Object.entries({
   dark: themes.dark,
-  midnight: themes.midnight,
+  // midnight: themes.midnight,
 }).map(([key, { name }]) => [key, name] as [DarkTheme, string]);
 
 export function useTheme() {
-  const [theme = 'auto', setThemePref] = useGlobalPref('theme');
+  const [theme = 'light', setThemePref] = useGlobalPref('theme');
   return [theme, setThemePref] as const;
 }
 
@@ -46,6 +46,7 @@ export function usePreferredDarkTheme() {
 
 export function ThemeStyle() {
   const [activeTheme] = useTheme();
+  console.log('activeTheme', activeTheme);
   const [darkThemePreference] = usePreferredDarkTheme();
   const [themeColors, setThemeColors] = useState<
     | typeof lightTheme
@@ -56,40 +57,55 @@ export function ThemeStyle() {
   >(undefined);
 
   useEffect(() => {
+    // if (activeTheme === 'auto') {
+    //   // Map unavailable themes to available ones
+    //   const availableThemeKey = darkThemePreference in themes
+    //     ? (darkThemePreference as keyof typeof themes)
+    //     : 'dark';
+    //   const darkTheme = themes[availableThemeKey];
+
+    //   function darkThemeMediaQueryListener(event: MediaQueryListEvent) {
+    //     if (event.matches) {
+    //       setThemeColors(darkTheme.colors);
+    //     } else {
+    //       setThemeColors(themes['light'].colors);
+    //     }
+    //   }
+    //   const darkThemeMediaQuery = window.matchMedia(
+    //     '(prefers-color-scheme: dark)',
+    //   );
+
+    //   darkThemeMediaQuery.addEventListener(
+    //     'change',
+    //     darkThemeMediaQueryListener,
+    //   );
+
+    //   if (darkThemeMediaQuery.matches) {
+    //     setThemeColors(darkTheme.colors);
+    //   } else {
+    //     setThemeColors(themes['light'].colors);
+    //   }
+
+    //   return () => {
+    //     darkThemeMediaQuery.removeEventListener(
+    //       'change',
+    //       darkThemeMediaQueryListener,
+    //     );
+    //   };
+    // } else {
+    //   // Handle case where activeTheme might not be available in themes object
+    //   const availableTheme = activeTheme in themes
+    //     ? (activeTheme as keyof typeof themes)
+    //     : 'light';
+    //   setThemeColors(themes[availableTheme]?.colors);
+    // }
+    // Handle case where activeTheme might not be available in themes object
     if (activeTheme === 'auto') {
-      const darkTheme = themes[darkThemePreference];
-
-      function darkThemeMediaQueryListener(event: MediaQueryListEvent) {
-        if (event.matches) {
-          setThemeColors(darkTheme.colors);
-        } else {
-          setThemeColors(themes['light'].colors);
-        }
-      }
-      const darkThemeMediaQuery = window.matchMedia(
-        '(prefers-color-scheme: dark)',
-      );
-
-      darkThemeMediaQuery.addEventListener(
-        'change',
-        darkThemeMediaQueryListener,
-      );
-
-      if (darkThemeMediaQuery.matches) {
-        setThemeColors(darkTheme.colors);
-      } else {
-        setThemeColors(themes['light'].colors);
-      }
-
-      return () => {
-        darkThemeMediaQuery.removeEventListener(
-          'change',
-          darkThemeMediaQueryListener,
-        );
-      };
-    } else {
-      setThemeColors(themes[activeTheme as ThemeKey]?.colors);
+      setThemeColors(themes['light'].colors);
     }
+    const availableTheme =
+      activeTheme in themes ? (activeTheme as keyof typeof themes) : 'light';
+    setThemeColors(themes[availableTheme as ThemeKey]?.colors);
   }, [activeTheme, darkThemePreference]);
 
   if (!themeColors) return null;

@@ -125,6 +125,46 @@ export function getMenu() {
         },
       ],
     },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Documentation',
+          click(_menuItem, focusedWin) {
+            if (focusedWin) {
+              const browserWindow = focusedWin as BrowserWindow;
+              browserWindow.webContents.executeJavaScript(
+                'window.open("https://actualbudget.org/docs", "_blank")',
+              );
+            }
+          },
+        },
+        // {
+        //   label: 'Community Support (Discord)',
+        //   click(_menuItem, focusedWin) {
+        //     if (focusedWin) {
+        //      const browserWindow = focusedWin as BrowserWindow;
+        //      browserWindow.webContents.executeJavaScript(
+        //       'window.open("https://discord.gg/pRYNYr4W5A", "_blank")',
+        //     );
+        //     }
+        //   },
+        // },
+        {
+          label: 'Keyboard Shortcuts',
+          accelerator: '?',
+          enabled: !!budgetId,
+          click: function (_menuItem, focusedWin) {
+            if (focusedWin) {
+              const browserWindow = focusedWin as BrowserWindow;
+              browserWindow.webContents.executeJavaScript(
+                'window.__actionsForMenu && !window.__actionsForMenu.inputFocused() && window.__actionsForMenu.pushModal({ modal: { name: "keyboard-shortcuts" } })',
+              );
+            }
+          },
+        },
+      ],
+    },
   ];
 
   if (process.platform === 'darwin') {

@@ -308,6 +308,7 @@ export function updateWithSchema(table, fields) {
 // Data-specific functions. Ideally this would be split up into
 // different files
 
+// TODO: Fix return type. This should returns a DbCategory[].
 export async function getCategories(
   ids?: Array<DbCategory['id']>,
 ): Promise<DbCategory[]> {
@@ -318,6 +319,7 @@ export async function getCategories(
     : await all<DbCategory>(query);
 }
 
+// TODO: Fix return type. This should returns a [DbCategoryGroup, ...DbCategory].
 export async function getCategoriesGrouped(
   ids?: Array<DbCategoryGroup['id']>,
 ): Promise<

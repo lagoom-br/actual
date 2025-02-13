@@ -25,6 +25,7 @@ export type Config = {
     fileSizeLimitMB: number;
   };
   openId?: {
+    autoLogin?: boolean;
     issuer:
       | string
       | {

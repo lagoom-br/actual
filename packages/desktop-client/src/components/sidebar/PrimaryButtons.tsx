@@ -20,9 +20,12 @@ import { Item } from './Item';
 import { SecondaryItem } from './SecondaryItem';
 
 import { useIsTestEnv } from '@desktop-client/hooks/useIsTestEnv';
+import { useAuth } from '@desktop-client/auth/AuthProvider';
+import { Permissions } from '@desktop-client/auth/types';
 import { useSyncServerStatus } from '@desktop-client/hooks/useSyncServerStatus';
 
 export function PrimaryButtons() {
+  const { hasPermission } = useAuth();
   const { t } = useTranslation();
   const [isOpen, setOpen] = useState(false);
   const onToggle = useCallback(() => setOpen(open => !open), []);
@@ -72,7 +75,7 @@ export function PrimaryButtons() {
             to="/rules"
             indent={15}
           />
-          {isUsingServer && (
+          {isUsingServer && hasPermission(Permissions.ADMINISTRATOR) && (
             <SecondaryItem
               title={t('Bank Sync')}
               Icon={SvgCreditCard}

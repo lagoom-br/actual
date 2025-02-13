@@ -216,8 +216,12 @@ async function startSyncServer() {
 
     const globalPrefs = await loadGlobalPrefs();
 
+    const syncServerConfigJson = globalPrefs.syncServerConfig;
     const syncServerConfig = {
-      port: globalPrefs.syncServerConfig?.port || 5007,
+      port:
+        (syncServerConfigJson
+          ? JSON.parse(syncServerConfigJson).port
+          : undefined) || 5007,
       hostname: 'localhost',
       ACTUAL_SERVER_DATA_DIR: path.resolve(
         process.env.ACTUAL_DATA_DIR!,
@@ -433,7 +437,11 @@ app.on('ready', async () => {
 
   const globalPrefs = await loadGlobalPrefs();
 
-  if (globalPrefs.syncServerConfig?.autoStart) {
+  const syncServerConfigJson = globalPrefs.syncServerConfig;
+  const syncServerConfig = syncServerConfigJson
+    ? JSON.parse(syncServerConfigJson)
+    : {};
+  if (syncServerConfig.autoStart) {
     // wait for the server to start before starting the Actual client to ensure server is available
     await startSyncServer();
   }

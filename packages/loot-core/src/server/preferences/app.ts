@@ -112,7 +112,10 @@ async function saveGlobalPrefs(prefs: GlobalPrefs) {
     );
   }
   if (prefs.syncServerConfig !== undefined) {
-    await asyncStorage.setItem('syncServerConfig', prefs.syncServerConfig);
+    await asyncStorage.setItem(
+      'syncServerConfig',
+      JSON.stringify(prefs.syncServerConfig),
+    );
   }
   if (prefs.notifyWhenUpdateIsAvailable !== undefined) {
     await asyncStorage.setItem(
@@ -136,7 +139,7 @@ async function loadGlobalPrefs(): Promise<GlobalPrefs> {
     'installed-custom-theme': installedCustomTheme,
     'server-self-signed-cert': serverSelfSignedCert,
     syncServerConfig,
-    notifyWhenUpdateIsAvailable,
+    notifyWhenUpdateIsAvailable: _notifyWhenUpdateIsAvailable,
   } = await asyncStorage.multiGet([
     'floating-sidebar',
     'category-expanded-state',
@@ -172,11 +175,9 @@ async function loadGlobalPrefs(): Promise<GlobalPrefs> {
         : 'dark',
     installedCustomTheme: installedCustomTheme || undefined,
     serverSelfSignedCert: serverSelfSignedCert || undefined,
-    syncServerConfig: syncServerConfig || undefined,
-    notifyWhenUpdateIsAvailable:
-      notifyWhenUpdateIsAvailable === undefined
-        ? true
-        : notifyWhenUpdateIsAvailable, // default to true
+    syncServerConfig: syncServerConfig
+      ? JSON.parse(syncServerConfig)
+      : undefined,
   };
 }
 

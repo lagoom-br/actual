@@ -15,11 +15,12 @@ export type AuthHandlers = {
   'subscribe-get-user': typeof getUser;
   'subscribe-change-password': typeof changePassword;
   'subscribe-sign-in': typeof signIn;
-  'subscribe-sign-out': typeof signOut;
+  'subscribe-clear-session': typeof clearSession;
   'subscribe-set-token': typeof setToken;
   'enable-openid': typeof enableOpenId;
   'get-openid-config': typeof getOpenIdConfig;
   'enable-password': typeof enablePassword;
+  'subscribe-logout-openid': typeof logoutOpenid;
 };
 
 export const app = createApp<AuthHandlers>();
@@ -30,11 +31,12 @@ app.method('subscribe-get-login-methods', getLoginMethods);
 app.method('subscribe-get-user', getUser);
 app.method('subscribe-change-password', changePassword);
 app.method('subscribe-sign-in', signIn);
-app.method('subscribe-sign-out', signOut);
+app.method('subscribe-clear-session', clearSession);
 app.method('subscribe-set-token', setToken);
 app.method('enable-openid', enableOpenId);
 app.method('get-openid-config', getOpenIdConfig);
 app.method('enable-password', enablePassword);
+app.method('subscribe-logout-openid', logoutOpenid);
 
 async function didBootstrap() {
   return Boolean(await asyncStorage.getItem('did-bootstrap'));
@@ -74,6 +76,7 @@ async function needsBootstrap({ url }: { url?: string } = {}) {
         active: boolean;
       }>;
       multiuser: boolean;
+      autoLogin: boolean;
     };
   };
 
@@ -90,6 +93,7 @@ async function needsBootstrap({ url }: { url?: string } = {}) {
     ],
     multiuser: res.data.multiuser || false,
     hasServer: true,
+    autoLogin: res.data.autoLogin || false,
   };
 }
 
@@ -249,10 +253,21 @@ async function signIn(
   ) {
     loginInfo.loginMethod = 'password';
   }
-  let res: {
+
+  interface ServerResponse {
+    status?: string;
+    data?: {
+      token?: string;
+      returnUrl?: string;
+    };
+    // Legacy format support
     token?: string;
+    return_url?: string;
+    // Direct format (from post() function unwrapping)
     returnUrl?: string;
-  };
+  }
+
+  let res: ServerResponse;
 
   try {
     const serverConfig = getServer();
@@ -270,19 +285,24 @@ async function signIn(
     throw err;
   }
 
-  if (res.returnUrl) {
-    return { redirectUrl: res.returnUrl };
+  // Handle return URL for OpenID flow - check all possible response formats
+  const returnUrl = res.data?.returnUrl || res.return_url || res.returnUrl;
+  if (returnUrl) {
+    return { return_url: returnUrl };
   }
 
-  if (!res.token) {
+  // Extract token from proper response structure
+  const token = res.data?.token || res.token;
+
+  if (!token) {
     throw new Error('login: User token not set');
   }
 
-  await asyncStorage.setItem('user-token', res.token);
+  await asyncStorage.setItem('user-token', token);
   return {};
 }
 
-async function signOut() {
+async function clearSession() {
   encryption.unloadAllKeys();
   await asyncStorage.multiRemove([
     'user-token',
@@ -291,6 +311,42 @@ async function signOut() {
     'readOnly',
   ]);
   return 'ok';
+}
+
+async function logoutOpenid({ returnUrl }: { returnUrl: string }) {
+  logger.log('[DEBUG] logoutOpenid called with returnUrl:', returnUrl);
+  let res;
+
+  try {
+    const server = getServer();
+    if (!server) {
+      logger.log('[DEBUG] No server configured');
+      return { error: 'server-not-configured' };
+    }
+
+    const logoutUrl =
+      server.BASE_SERVER + `/openid/logout?returnUrl=${returnUrl}`;
+    logger.log('[DEBUG] Making request to logout endpoint:', logoutUrl);
+
+    const rawResponse = await get(logoutUrl);
+    logger.log('[DEBUG] Raw response from server:', rawResponse);
+
+    res = JSON.parse(rawResponse);
+    logger.log('[DEBUG] Parsed logout response:', res);
+  } catch (err) {
+    logger.error('[DEBUG] logoutOpenid error:', err);
+    const reason = err instanceof PostError ? err.reason : 'network-failure';
+    return { error: reason };
+  }
+
+  if (res.url) {
+    logger.log('[DEBUG] Found logout URL in response:', res.url);
+    logger.log('[DEBUG] Returning url property for frontend');
+    return { url: res.url };
+  }
+
+  logger.error('[DEBUG] No url property found in response:', res);
+  return { error: 'unknown' };
 }
 
 async function setToken({ token }: { token: string }) {

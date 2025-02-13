@@ -4,7 +4,7 @@ import * as fs from '../../platform/server/fs';
 import { handlers } from '../main';
 
 export async function uniqueBudgetName(
-  initialName: string = 'My Finances',
+  initialName: string = '🏦 Minhas Finanças',
 ): Promise<string> {
   const budgets = await handlers['get-budgets']();
   let idx = 1;
