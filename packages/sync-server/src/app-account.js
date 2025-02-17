@@ -10,12 +10,12 @@ import {
 } from './account-db.js';
 import { isValidRedirectUrl, loginWithOpenIdSetup } from './accounts/openid.js';
 import { changePassword, loginWithPassword } from './accounts/password.js';
-import finalConfig from './load-config.js';
 import {
   errorMiddleware,
   requestLoggerMiddleware,
 } from './util/middlewares.js';
 import { validateAuthHeader, validateSession } from './util/validate-user.js';
+import { config } from './load-config.js';
 
 const app = express();
 app.use(express.json());
@@ -39,8 +39,8 @@ app.get('/needs-bootstrap', (req, res) => {
       availableLoginMethods: listLoginMethods(),
       multiuser: getActiveLoginMethod() === 'openid',
       autoLogin:
-        'openId' in finalConfig && 'autoLogin' in finalConfig.openId
-          ? finalConfig.openId.autoLogin
+        'openId' in config && 'autoLogin' in config.openId
+          ? config.openId.autoLogin
           : false,
     },
   });
