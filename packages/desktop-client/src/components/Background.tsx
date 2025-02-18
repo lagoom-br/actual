@@ -2,8 +2,6 @@ import React from 'react';
 
 import { theme } from '../style';
 
-import { LoadComponent } from './util/LoadComponent';
-
 export function Background() {
   return (
     <div
@@ -47,10 +45,6 @@ export function Background() {
             />
           </linearGradient>
         </defs>
-        <LoadComponent
-          importer={() => import('./BackgroundImage')}
-          name="BackgroundImage"
-        />
       </svg>
     </div>
   );

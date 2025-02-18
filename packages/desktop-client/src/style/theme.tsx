@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
 
-import { isNonProductionEnvironment } from 'loot-core/shared/environment';
-import type { DarkTheme, Theme } from 'loot-core/types/prefs';
+import type { DarkTheme, Theme } from 'loot-core/src/types/prefs';
 
 import { useGlobalPref } from '../hooks/useGlobalPref';
 
 import * as darkTheme from './themes/dark';
-import * as developmentTheme from './themes/development';
+import type * as developmentTheme from './themes/development';
 import * as lightTheme from './themes/light';
-import * as midnightTheme from './themes/midnight';
+import type * as midnightTheme from './themes/midnight';
 
 const themes = {
   light: { name: 'Light', colors: lightTheme },
   dark: { name: 'Dark', colors: darkTheme },
-  midnight: { name: 'Midnight', colors: midnightTheme },
+  // midnight: { name: 'Midnight', colors: midnightTheme },
   auto: { name: 'System default', colors: darkTheme },
-  ...(isNonProductionEnvironment() && {
-    development: { name: 'Development', colors: developmentTheme },
-  }),
+  // ...(isNonProductionEnvironment() && {
+  //   development: { name: 'Development', colors: developmentTheme },
+  // }),
 };
 
 export const themeOptions = Object.entries(themes).map(
@@ -26,7 +25,7 @@ export const themeOptions = Object.entries(themes).map(
 
 export const darkThemeOptions = Object.entries({
   dark: themes.dark,
-  midnight: themes.midnight,
+  // midnight: themes.midnight,
 }).map(([key, { name }]) => [key, name] as [DarkTheme, string]);
 
 export function useTheme() {

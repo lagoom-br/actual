@@ -44,7 +44,7 @@ export function loadPrefs() {
     );
 
     // We need to load translations before the app renders
-    setI18NextLanguage(globalPrefs.language ?? '');
+    setI18NextLanguage('pt-BR');
 
     return prefs;
   };

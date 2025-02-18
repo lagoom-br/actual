@@ -5,8 +5,11 @@ import { Link } from '../common/Link';
 import { Text } from '../common/Text';
 import { View } from '../common/View';
 import { useServerURL } from '../ServerContext';
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 
 export function ServerURL() {
+  const { hasPermission } = useAuth();
   const url = useServerURL();
 
   return (
@@ -33,9 +36,11 @@ export function ServerURL() {
           </Trans>
         )}
       </Text>
-      <Link variant="internal" to="/config-server" style={{ marginLeft: 15 }}>
-        <Trans>Change</Trans>
-      </Link>
+      {hasPermission(Permissions.ADMINISTRATOR) && (
+        <Link variant="internal" to="/config-server" style={{ marginLeft: 15 }}>
+          <Trans>Change</Trans>
+        </Link>
+      )}
     </View>
   );
 }
