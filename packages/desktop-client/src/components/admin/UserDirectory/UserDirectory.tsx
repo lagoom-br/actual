@@ -169,7 +169,7 @@ function UserDirectoryContent({
             message: getUserDirectoryErrors(error),
             button: {
               title: t('Go to login'),
-              action: () => dispatch(signOut()),
+              action: () => dispatch(signOut(true)),
             },
           }),
         );

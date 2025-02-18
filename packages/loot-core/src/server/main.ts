@@ -1721,6 +1721,27 @@ handlers['subscribe-sign-out'] = async function () {
   return 'ok';
 };
 
+handlers['subscribe-logout-openid'] = async function ({ returnUrl }) {
+  debugger;
+  let res;
+
+  try {
+    res = JSON.parse(
+      await get(
+        getServer().BASE_SERVER + `/openid/logout?returnUrl=${returnUrl}`,
+      ),
+    );
+  } catch (err) {
+    return { error: err.reason || 'network-failure' };
+  }
+
+  if (res.url) {
+    return { redirect_url: res.url };
+  }
+
+  return { error: 'unknown' };
+};
+
 handlers['subscribe-set-token'] = async function ({ token }) {
   await asyncStorage.setItem('user-token', token);
 };

@@ -341,6 +341,10 @@ export interface ServerHandlers {
 
   'subscribe-sign-out': () => Promise<'ok'>;
 
+  'subscribe-logout-openid': (arg: {
+    returnUrl: string;
+  }) => Promise<{ error?: string; redirect_url?: string }>;
+
   'subscribe-set-token': (arg: { token: string }) => Promise<void>;
 
   'get-server-version': () => Promise<{ error?: string } | { version: string }>;

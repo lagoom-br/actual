@@ -10,12 +10,12 @@ import {
 } from './account-db.js';
 import { isValidRedirectUrl, loginWithOpenIdSetup } from './accounts/openid.js';
 import { changePassword, loginWithPassword } from './accounts/password.js';
+import { config } from './load-config.js';
 import {
   errorMiddleware,
   requestLoggerMiddleware,
 } from './util/middlewares.js';
 import { validateAuthHeader, validateSession } from './util/validate-user.js';
-import { config } from './load-config.js';
 
 const app = express();
 app.use(express.json());
