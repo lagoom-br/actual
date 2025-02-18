@@ -515,8 +515,11 @@ handlers['payees-get-rules'] = async function ({ id }) {
   return rules.getRulesForPayee(id).map(rule => rule.serialize());
 };
 
-handlers['make-filters-from-conditions'] = async function ({ conditions }) {
-  return rules.conditionsToAQL(conditions);
+handlers['make-filters-from-conditions'] = async function ({
+  conditions,
+  applySpecialCases,
+}) {
+  return rules.conditionsToAQL(conditions, { applySpecialCases });
 };
 
 handlers['getCell'] = async function ({ sheetName, name }) {
@@ -1716,6 +1719,27 @@ handlers['subscribe-sign-out'] = async function () {
     'readOnly',
   ]);
   return 'ok';
+};
+
+handlers['subscribe-logout-openid'] = async function ({ returnUrl }) {
+  debugger;
+  let res;
+
+  try {
+    res = JSON.parse(
+      await get(
+        getServer().BASE_SERVER + `/openid/logout?returnUrl=${returnUrl}`,
+      ),
+    );
+  } catch (err) {
+    return { error: err.reason || 'network-failure' };
+  }
+
+  if (res.url) {
+    return { redirect_url: res.url };
+  }
+
+  return { error: 'unknown' };
 };
 
 handlers['subscribe-set-token'] = async function ({ token }) {

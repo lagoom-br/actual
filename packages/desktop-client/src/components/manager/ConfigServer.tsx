@@ -6,7 +6,7 @@ import { createBudget, loggedIn, signOut } from 'loot-core/client/actions';
 import {
   isNonProductionEnvironment,
   isElectron,
-} from 'loot-core/src/shared/environment';
+} from 'loot-core/shared/environment';
 
 import { useGlobalPref } from '../../hooks/useGlobalPref';
 import { useNavigate } from '../../hooks/useNavigate';
@@ -78,7 +78,7 @@ export function ConfigServer() {
       setError(error);
     } else {
       setLoading(false);
-      await dispatch(signOut());
+      await dispatch(signOut(true));
       navigate('/');
     }
   }
