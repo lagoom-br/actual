@@ -101,12 +101,12 @@ export const buttonMenuSelectedBorder = buttonMenuSelectedBackground;
 
 export const buttonPrimaryText = colorPalette.white;
 export const buttonPrimaryTextHover = buttonPrimaryText;
-export const buttonPrimaryBackground = colorPalette.slateblue;
-export const buttonPrimaryBackgroundHover = colorPalette.navy700;
+export const buttonPrimaryBackground = colorPalette.greenbutton;
+export const buttonPrimaryBackgroundHover = colorPalette.greenbuttonhover;
 export const buttonPrimaryBorder = buttonPrimaryBackground;
 export const buttonPrimaryShadow = 'rgba(0, 0, 0, 0.3)';
 export const buttonPrimaryDisabledText = colorPalette.white;
-export const buttonPrimaryDisabledBackground = colorPalette.navy400;
+export const buttonPrimaryDisabledBackground = colorPalette.greenbuttondisabled;
 export const buttonPrimaryDisabledBorder = buttonPrimaryDisabledBackground;
 
 export const buttonNormalText = colorPalette.navy900;
