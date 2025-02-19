@@ -1,12 +1,12 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 import { Link } from '../common/Link';
 import { Text } from '../common/Text';
 import { View } from '../common/View';
 import { useServerURL } from '../ServerContext';
-import { useAuth } from '../../auth/AuthProvider';
-import { Permissions } from '../../auth/types';
 
 export function ServerURL() {
   const { hasPermission } = useAuth();

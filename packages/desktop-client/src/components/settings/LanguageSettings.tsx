@@ -3,6 +3,8 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { type TFunction } from 'i18next';
 
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 import { useGlobalPref } from '../../hooks/useGlobalPref';
 import { availableLanguages, setI18NextLanguage } from '../../i18n';
 import { Link } from '../common/Link';
@@ -11,8 +13,6 @@ import { Select, type SelectOption } from '../common/Select';
 import { Text } from '../common/Text';
 
 import { Setting } from './UI';
-import { useAuth } from '../../auth/AuthProvider';
-import { Permissions } from '../../auth/types';
 
 const languageOptions = (t: TFunction): SelectOption[] =>
   [
@@ -85,5 +85,7 @@ export function LanguageSettings() {
         )}
       </Text>
     </Setting>
-  ) : <></>;
+  ) : (
+    <></>
+  );
 }
