@@ -4,16 +4,16 @@ import type { DarkTheme, Theme } from 'loot-core/src/types/prefs';
 
 import { useGlobalPref } from '../hooks/useGlobalPref';
 
-import * as darkTheme from './themes/dark';
+import type * as darkTheme from './themes/dark';
 import type * as developmentTheme from './themes/development';
 import * as lightTheme from './themes/light';
 import type * as midnightTheme from './themes/midnight';
 
 const themes = {
   light: { name: 'Light', colors: lightTheme },
-  dark: { name: 'Dark', colors: darkTheme },
+  //dark: { name: 'Dark', colors: darkTheme },
   // midnight: { name: 'Midnight', colors: midnightTheme },
-  auto: { name: 'System default', colors: darkTheme },
+  //auto: { name: 'System default', colors: darkTheme },
   // ...(isNonProductionEnvironment() && {
   //   development: { name: 'Development', colors: developmentTheme },
   // }),
@@ -24,17 +24,17 @@ export const themeOptions = Object.entries(themes).map(
 );
 
 export const darkThemeOptions = Object.entries({
-  dark: themes.dark,
+  dark: themes.light,
   // midnight: themes.midnight,
 }).map(([key, { name }]) => [key, name] as [DarkTheme, string]);
 
 export function useTheme() {
-  const [theme = 'auto', setThemePref] = useGlobalPref('theme');
+  const [theme = 'light', setThemePref] = useGlobalPref('theme');
   return [theme, setThemePref] as const;
 }
 
 export function usePreferredDarkTheme() {
-  const [darkTheme = 'dark', setDarkTheme] =
+  const [darkTheme = 'light', setDarkTheme] =
     useGlobalPref('preferredDarkTheme');
   return [darkTheme, setDarkTheme] as const;
 }
@@ -55,11 +55,11 @@ export function ThemeStyle() {
       const darkTheme = themes[darkThemePreference];
 
       function darkThemeMediaQueryListener(event: MediaQueryListEvent) {
-        if (event.matches) {
-          setThemeColors(darkTheme.colors);
-        } else {
-          setThemeColors(themes['light'].colors);
-        }
+        // if (event.matches) {
+        //   setThemeColors(darkTheme.colors);
+        // } else {
+        setThemeColors(themes['light'].colors);
+        // }
       }
       const darkThemeMediaQuery = window.matchMedia(
         '(prefers-color-scheme: dark)',
@@ -70,11 +70,11 @@ export function ThemeStyle() {
         darkThemeMediaQueryListener,
       );
 
-      if (darkThemeMediaQuery.matches) {
-        setThemeColors(darkTheme.colors);
-      } else {
-        setThemeColors(themes['light'].colors);
-      }
+      // if (darkThemeMediaQuery.matches) {
+      //   setThemeColors(darkTheme.colors);
+      // } else {
+      setThemeColors(themes['light'].colors);
+      // }
 
       return () => {
         darkThemeMediaQuery.removeEventListener(

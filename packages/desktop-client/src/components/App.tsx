@@ -28,6 +28,7 @@ import {
 
 import { handleGlobalEvents } from '../global-events';
 import { useMetadataPref } from '../hooks/useMetadataPref';
+import { setI18NextLanguage } from '../i18n';
 import { installPolyfills } from '../polyfills';
 import { useDispatch, useSelector, useStore } from '../redux';
 import { styles, hasHiddenScrollbars, ThemeStyle, useTheme } from '../style';
@@ -44,7 +45,6 @@ import { Modals } from './Modals';
 import { ResponsiveProvider } from './responsive/ResponsiveProvider';
 import { SidebarProvider } from './sidebar/SidebarProvider';
 import { UpdateNotification } from './UpdateNotification';
-import { setI18NextLanguage } from '../i18n';
 
 function AppInner() {
   const [budgetId] = useMetadataPref('id');

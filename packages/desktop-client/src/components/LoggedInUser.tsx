@@ -178,7 +178,7 @@ export function LoggedInUser({
       baseMenu.push({ name: 'sign-out', text: t('Sign out') });
     }
 
-    if(hasPermission(Permissions.ADMINISTRATOR)) {
+    if (hasPermission(Permissions.ADMINISTRATOR)) {
       baseMenu.push({
         name: 'config-server',
         text: serverUrl ? t('Change server URL') : t('Start using a server'),
@@ -200,6 +200,7 @@ export function LoggedInUser({
 
     if (
       multiuserEnabled &&
+      isAdmin &&
       ((currentFile && userData && currentFile.owner === userData.userId) ||
         isAdmin) &&
       serverUrl &&

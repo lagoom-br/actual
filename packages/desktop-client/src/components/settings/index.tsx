@@ -7,6 +7,8 @@ import { closeBudget, loadPrefs } from 'loot-core/client/actions';
 import { isElectron } from 'loot-core/shared/environment';
 import { listen } from 'loot-core/src/platform/client/fetch';
 
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 import { useGlobalPref } from '../../hooks/useGlobalPref';
 import { useIsOutdated, useLatestVersion } from '../../hooks/useLatestVersion';
 import { useMetadataPref } from '../../hooks/useMetadataPref';
@@ -36,8 +38,6 @@ import { RepairTransactions } from './RepairTransactions';
 import { ResetCache, ResetSync } from './Reset';
 import { ThemeSettings } from './Themes';
 import { AdvancedToggle, Setting } from './UI';
-import { useAuth } from '../../auth/AuthProvider';
-import { Permissions } from '../../auth/types';
 
 function About() {
   const version = useServerVersion();
@@ -203,9 +203,9 @@ export function Settings() {
           </View>
         )}
         <About />
-        <ThemeSettings />
         {hasPermission(Permissions.ADMINISTRATOR) && (
           <>
+            <ThemeSettings />
             <FormatSettings />
             <LanguageSettings />
             <AuthSettings />
