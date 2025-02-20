@@ -1,6 +1,8 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { Menu } from '@actual-app/components/menu';
+import { Text } from '@actual-app/components/text';
 import { type TFunction } from 'i18next';
 
 import { useAuth } from '../../auth/AuthProvider';
@@ -8,9 +10,7 @@ import { Permissions } from '../../auth/types';
 import { useGlobalPref } from '../../hooks/useGlobalPref';
 import { availableLanguages, setI18NextLanguage } from '../../i18n';
 import { Link } from '../common/Link';
-import { Menu } from '../common/Menu';
 import { Select, type SelectOption } from '../common/Select';
-import { Text } from '../common/Text';
 
 import { Setting } from './UI';
 
