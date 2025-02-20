@@ -19,8 +19,11 @@ import { SvgCalendar } from '../../icons/v2';
 
 import { Item } from './Item';
 import { SecondaryItem } from './SecondaryItem';
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 
 export function PrimaryButtons() {
+  const { hasPermission } = useAuth();
   const { t } = useTranslation();
   const [isOpen, setOpen] = useState(false);
   const onToggle = useCallback(() => setOpen(open => !open), []);
@@ -69,7 +72,7 @@ export function PrimaryButtons() {
             to="/rules"
             indent={15}
           />
-          {isUsingServer && (
+          {isUsingServer && hasPermission(Permissions.ADMINISTRATOR) && (
             <SecondaryItem
               title={t('Bank Sync')}
               Icon={SvgCreditCard}
