@@ -1681,10 +1681,11 @@ export function BudgetTable({
               onPress={onOpenBudgetPageMenu}
               aria-label={t('Budget page menu')}
             >
-              <SvgLogo
+              <img
                 style={{ color: theme.mobileHeaderText }}
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAgCAYAAAAFQMh/AAAB5klEQVR4nO3VP0hVYRjH8ee5ihJBXgIHTSIDQR0kWlxqlChNaNPJXUGDUGpplKAlCEmstWiLgtuQuAttLlYQ4V1cXPIP/in9NtxHeXl73uNRIQjOM91z7uf+fu97eC9HpJhiivnvB5gCVknPCtBj9jawlGEXgWtBdifwLjJ7wPQhaAfWEmGT0UIvA+sJ2+tsrAR8CcyQiEhJRERVf4jIeOKhXAkvVLUqIrMJez6+oaoHIlKxy9eq+vavXwGfnV2sAeci1wb8cuwTbzXAQ2AbaHWXCwwmHuGIY987rgrUOfYp8MwtNaDAVydw0bF3EosccGwFaE8WG7qfCLweuZLtMJ4PkasHXmWWGmwCNpzAl5G7BCw47jfQFrg+4MaxxYZnnMAtoByYYeAqsO/Yx4EbzVVquAs4cAIn7PuLwC37XHFcFagDysC93MUWOO8ELlM7gMPY6QXuOg5qh28IaPDySxndz517nSIyICK7qrpv9z6KyIpjx0SkQVX38m9Xjk7t98SuGyP7yHHbQPOJSoPAB07glOOagZ3IzZ2q1ALLwGYQ9hNoStg3UXHPqYstcDYIm85wNwP36UylFthN7a+1A7QcYw/f1f1nLrbABeBFDjcKfAOy/i0nKh4EOnK4CzhvsmKK+afzB+JFlkOsWQFYAAAAAElFTkSuQmCC"
                 width="20"
-                height="20"
+                height="auto"
               />
               <SvgCheveronRight
                 style={{ flexShrink: 0, color: theme.mobileHeaderTextSubdued }}
