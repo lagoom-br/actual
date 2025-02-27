@@ -1,11 +1,14 @@
 import React, { type ReactNode, useEffect } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
+import { Button } from '@actual-app/components/button';
+import { Text } from '@actual-app/components/text';
+import { View } from '@actual-app/components/view';
 import { css } from '@emotion/css';
 
 import { closeBudget, loadPrefs } from 'loot-core/client/actions';
+import { listen } from 'loot-core/platform/client/fetch';
 import { isElectron } from 'loot-core/shared/environment';
-import { listen } from 'loot-core/src/platform/client/fetch';
 
 import { useAuth } from '../../auth/AuthProvider';
 import { Permissions } from '../../auth/types';
@@ -15,11 +18,8 @@ import { useMetadataPref } from '../../hooks/useMetadataPref';
 import { useDispatch } from '../../redux';
 import { theme } from '../../style';
 import { tokens } from '../../tokens';
-import { Button } from '../common/Button2';
 import { Input } from '../common/Input';
 import { Link } from '../common/Link';
-import { Text } from '../common/Text';
-import { View } from '../common/View';
 import { FormField, FormLabel } from '../forms';
 import { MOBILE_NAV_HEIGHT } from '../mobile/MobileNavTabs';
 import { Page } from '../Page';
@@ -51,7 +51,17 @@ function About() {
         <Trans>
           <strong>Actual</strong> is a super fast privacy-focused app for
           managing your finances.
-        </Trans>
+        </Trans>{' '}
+        Baseado no projeto de código aberto{' '}
+        <Link
+          variant="external"
+          linkColor="purple"
+          to="https://actualbudget.org"
+        >
+          Actual Budget
+        </Link>{' '}
+        sob a licença MIT, ele vai te ajudar a colocar o método Fiwell em
+        prática e sair da bagunça financeira de uma vez por todas.
       </Text>
       {hasPermission(Permissions.ADMINISTRATOR) && (
         <View

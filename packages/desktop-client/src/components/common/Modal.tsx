@@ -16,22 +16,23 @@ import {
 import { useHotkeysContext } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
+import { Button } from '@actual-app/components/button';
+import { AnimatedLoading } from '@actual-app/components/icons/AnimatedLoading';
+import { styles } from '@actual-app/components/styles';
+import { Text } from '@actual-app/components/text';
+import { TextOneLine } from '@actual-app/components/text-one-line';
+import { theme } from '@actual-app/components/theme';
+import { tokens } from '@actual-app/components/tokens';
+import { View } from '@actual-app/components/view';
 import { css } from '@emotion/css';
 import { AutoTextSize } from 'auto-text-size';
 
 import { useModalState } from '../../hooks/useModalState';
-import { AnimatedLoading } from '../../icons/AnimatedLoading';
 import { SvgLogo } from '../../icons/logo';
 import { SvgDelete } from '../../icons/v0';
-import { styles, theme } from '../../style';
-import { tokens } from '../../tokens';
 import { useResponsive } from '../responsive/ResponsiveProvider';
 
-import { Button } from './Button2';
 import { Input } from './Input';
-import { Text } from './Text';
-import { TextOneLine } from './TextOneLine';
-import { View } from './View';
 
 type ModalProps = ComponentPropsWithRef<typeof ReactAriaModal> & {
   name: string;
@@ -331,11 +332,10 @@ export function ModalHeader({
           }}
         >
           {showLogo && (
-            <SvgLogo
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAgCAYAAAAFQMh/AAAB5klEQVR4nO3VP0hVYRjH8ee5ihJBXgIHTSIDQR0kWlxqlChNaNPJXUGDUGpplKAlCEmstWiLgtuQuAttLlYQ4V1cXPIP/in9NtxHeXl73uNRIQjOM91z7uf+fu97eC9HpJhiivnvB5gCVknPCtBj9jawlGEXgWtBdifwLjJ7wPQhaAfWEmGT0UIvA+sJ2+tsrAR8CcyQiEhJRERVf4jIeOKhXAkvVLUqIrMJez6+oaoHIlKxy9eq+vavXwGfnV2sAeci1wb8cuwTbzXAQ2AbaHWXCwwmHuGIY987rgrUOfYp8MwtNaDAVydw0bF3EosccGwFaE8WG7qfCLweuZLtMJ4PkasHXmWWGmwCNpzAl5G7BCw47jfQFrg+4MaxxYZnnMAtoByYYeAqsO/Yx4EbzVVquAs4cAIn7PuLwC37XHFcFagDysC93MUWOO8ELlM7gMPY6QXuOg5qh28IaPDySxndz517nSIyICK7qrpv9z6KyIpjx0SkQVX38m9Xjk7t98SuGyP7yHHbQPOJSoPAB07glOOagZ3IzZ2q1ALLwGYQ9hNoStg3UXHPqYstcDYIm85wNwP36UylFthN7a+1A7QcYw/f1f1nLrbABeBFDjcKfAOy/i0nKh4EOnK4CzhvsmKK+afzB+JFlkOsWQFYAAAAAElFTkSuQmCC"
               aria-label={t('Modal logo')}
-              width={30}
-              height={30}
-              style={{ justifyContent: 'center', alignSelf: 'center' }}
+              style={{ justifyContent: 'center', alignSelf: 'center', width: 30, height: 'auto', filter: 'brightness(0)' }}
             />
           )}
           {title &&

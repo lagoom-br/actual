@@ -1,11 +1,12 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 
+import { Text } from '@actual-app/components/text';
+import { View } from '@actual-app/components/view';
+
 import { useAuth } from '../../auth/AuthProvider';
 import { Permissions } from '../../auth/types';
 import { Link } from '../common/Link';
-import { Text } from '../common/Text';
-import { View } from '../common/View';
 import { useServerURL } from '../ServerContext';
 
 export function ServerURL() {

@@ -1,18 +1,24 @@
 import React, { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Button } from '@actual-app/components/button';
+import { Card } from '@actual-app/components/card';
+import { Label } from '@actual-app/components/label';
+import { styles } from '@actual-app/components/styles';
+import { Text } from '@actual-app/components/text';
+import { View } from '@actual-app/components/view';
 import { css } from '@emotion/css';
 import { AutoTextSize } from 'auto-text-size';
 import memoizeOne from 'memoize-one';
 
 import { collapseModals, pushModal } from 'loot-core/client/actions';
-import { groupById, integerToCurrency } from 'loot-core/shared/util';
 import {
   envelopeBudget,
   trackingBudget,
   uncategorizedCount,
-} from 'loot-core/src/client/queries';
-import * as monthUtils from 'loot-core/src/shared/months';
+} from 'loot-core/client/queries';
+import * as monthUtils from 'loot-core/shared/months';
+import { groupById, integerToCurrency } from 'loot-core/shared/util';
 
 import { useCategories } from '../../../hooks/useCategories';
 import { useFeatureFlag } from '../../../hooks/useFeatureFlag';
@@ -29,17 +35,12 @@ import {
   SvgArrowThickRight,
   SvgCheveronRight,
 } from '../../../icons/v1';
-import { SvgViewShow } from '../../../icons/v2';
+import { SvgCalendar, SvgViewShow } from '../../../icons/v2';
 import { useDispatch } from '../../../redux';
-import { theme, styles } from '../../../style';
+import { theme } from '../../../style';
 import { BalanceWithCarryover } from '../../budget/BalanceWithCarryover';
 import { makeAmountGrey, makeBalanceAmountStyle } from '../../budget/util';
-import { Button } from '../../common/Button2';
-import { Card } from '../../common/Card';
-import { Label } from '../../common/Label';
 import { Link } from '../../common/Link';
-import { Text } from '../../common/Text';
-import { View } from '../../common/View';
 import { MobilePageHeader, Page } from '../../Page';
 import { PrivacyFilter } from '../../PrivacyFilter';
 import { useResponsive } from '../../responsive/ResponsiveProvider';
@@ -487,7 +488,13 @@ const ExpenseCategory = memo(function ExpenseCategory({
           });
           dispatch(collapseModals(`${modalBudgetType}-balance-menu`));
           showUndoNotification({
-            message: `Covered ${category.name} overspending from ${categoriesById[fromCategoryId].name}.`,
+            message: t(
+              `Covered {{toCategoryName}} overspending from {{fromCategoryName}}.`,
+              {
+                toCategoryName: category.name,
+                fromCategoryName: categoriesById[fromCategoryId].name,
+              },
+            ),
           });
         },
       }),
@@ -501,6 +508,7 @@ const ExpenseCategory = memo(function ExpenseCategory({
     month,
     onBudgetAction,
     showUndoNotification,
+    t,
   ]);
 
   const onOpenBalanceMenu = useCallback(() => {
@@ -1627,6 +1635,7 @@ export function BudgetTable({
   // editMode,
   onPrevMonth,
   onNextMonth,
+  onCurrentMonth,
   onSaveGroup,
   onDeleteGroup,
   onAddCategory,
@@ -1681,16 +1690,27 @@ export function BudgetTable({
               onPress={onOpenBudgetPageMenu}
               aria-label={t('Budget page menu')}
             >
-              <SvgLogo
+              <img
                 style={{ color: theme.mobileHeaderText }}
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAgCAYAAAAFQMh/AAAB5klEQVR4nO3VP0hVYRjH8ee5ihJBXgIHTSIDQR0kWlxqlChNaNPJXUGDUGpplKAlCEmstWiLgtuQuAttLlYQ4V1cXPIP/in9NtxHeXl73uNRIQjOM91z7uf+fu97eC9HpJhiivnvB5gCVknPCtBj9jawlGEXgWtBdifwLjJ7wPQhaAfWEmGT0UIvA+sJ2+tsrAR8CcyQiEhJRERVf4jIeOKhXAkvVLUqIrMJez6+oaoHIlKxy9eq+vavXwGfnV2sAeci1wb8cuwTbzXAQ2AbaHWXCwwmHuGIY987rgrUOfYp8MwtNaDAVydw0bF3EosccGwFaE8WG7qfCLweuZLtMJ4PkasHXmWWGmwCNpzAl5G7BCw47jfQFrg+4MaxxYZnnMAtoByYYeAqsO/Yx4EbzVVquAs4cAIn7PuLwC37XHFcFagDysC93MUWOO8ELlM7gMPY6QXuOg5qh28IaPDySxndz517nSIyICK7qrpv9z6KyIpjx0SkQVX38m9Xjk7t98SuGyP7yHHbQPOJSoPAB07glOOagZ3IzZ2q1ALLwGYQ9hNoStg3UXHPqYstcDYIm85wNwP36UylFthN7a+1A7QcYw/f1f1nLrbABeBFDjcKfAOy/i0nKh4EOnK4CzhvsmKK+afzB+JFlkOsWQFYAAAAAElFTkSuQmCC"
                 width="20"
-                height="20"
+                height="auto"
               />
               <SvgCheveronRight
                 style={{ flexShrink: 0, color: theme.mobileHeaderTextSubdued }}
                 width="14"
                 height="14"
               />
+            </Button>
+          }
+          rightContent={
+            <Button
+              variant="bare"
+              onPress={onCurrentMonth}
+              aria-label={t('Today')}
+              style={{ margin: 10 }}
+            >
+              <SvgCalendar width={20} height={20} />
             </Button>
           }
         />

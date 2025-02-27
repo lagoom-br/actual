@@ -1,12 +1,9 @@
 import { ImportTransactionsOpts } from '@actual-app/api';
 
-import { ParseFileResult } from '../server/accounts/parse-file';
-import { batchUpdateTransactions } from '../server/accounts/transactions';
 import { Backup } from '../server/backups';
 import { RemoteFile } from '../server/cloud-storage';
 import { Node as SpreadsheetNode } from '../server/spreadsheet/spreadsheet';
 import { Message } from '../server/sync';
-import { QueryState } from '../shared/query';
 
 import { Budget } from './budget';
 import {
@@ -26,33 +23,8 @@ import { Query } from './query';
 import { EmptyObject } from './util';
 
 export interface ServerHandlers {
-  'transaction-update': (transaction: { id: string }) => Promise<EmptyObject>;
-
   undo: () => Promise<void>;
-
   redo: () => Promise<void>;
-
-  'transactions-batch-update': (
-    ...arg: Parameters<typeof batchUpdateTransactions>
-  ) => ReturnType<typeof batchUpdateTransactions>;
-
-  'transaction-add': (transaction) => Promise<EmptyObject>;
-
-  'transaction-delete': (transaction) => Promise<EmptyObject>;
-
-  'transactions-parse-file': (arg: {
-    filepath: string;
-    options;
-  }) => Promise<ParseFileResult>;
-
-  'transactions-export': (arg: {
-    transactions;
-    accounts?;
-    categoryGroups;
-    payees;
-  }) => Promise<unknown>;
-
-  'transactions-export-query': (arg: { query: QueryState }) => Promise<string>;
 
   'get-categories': () => Promise<{
     grouped: Array<CategoryGroupEntity>;
@@ -127,6 +99,7 @@ export interface ServerHandlers {
 
   'make-filters-from-conditions': (arg: {
     conditions: unknown;
+    applySpecialCases?: boolean;
   }) => Promise<{ filters: unknown[] }>;
 
   getCell: (arg: {
@@ -191,7 +164,7 @@ export interface ServerHandlers {
   'secret-check': (arg: string) => Promise<string | { error?: string }>;
 
   'gocardless-poll-web-token': (arg: {
-    upgradingAccountId?: string;
+    upgradingAccountId?: string | undefined;
     requisitionId: string;
   }) => Promise<
     { error: 'unknown' } | { error: 'timeout' } | { data: GoCardlessToken }
@@ -227,7 +200,7 @@ export interface ServerHandlers {
   'gocardless-poll-web-token-stop': () => Promise<'ok'>;
 
   'gocardless-create-web-token': (arg: {
-    upgradingAccountId?: string;
+    upgradingAccountId?: string | undefined;
     institutionId: string;
     accessValidForDays: number;
   }) => Promise<
@@ -340,6 +313,10 @@ export interface ServerHandlers {
 
   'subscribe-sign-out': () => Promise<'ok'>;
 
+  'subscribe-logout-openid': (arg: {
+    returnUrl: string;
+  }) => Promise<{ error?: string; redirect_url?: string }>;
+
   'subscribe-set-token': (arg: { token: string }) => Promise<void>;
 
   'get-server-version': () => Promise<{ error?: string } | { version: string }>;
@@ -385,8 +362,8 @@ export interface ServerHandlers {
   'close-budget': () => Promise<'ok'>;
 
   'delete-budget': (arg: {
-    id?: string;
-    cloudFileId?: string;
+    id?: string | undefined;
+    cloudFileId?: string | undefined;
   }) => Promise<'ok' | 'fail'>;
 
   /**
@@ -399,8 +376,8 @@ export interface ServerHandlers {
    * @returns {Promise<string>} The ID of the newly created budget.
    */
   'duplicate-budget': (arg: {
-    id?: string;
-    cloudId?: string;
+    id?: string | undefined;
+    cloudId?: string | undefined;
     newName: string;
     cloudSync?: boolean;
     open: 'none' | 'original' | 'copy';
