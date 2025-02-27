@@ -12,10 +12,13 @@ import { createBudget, pushModal } from 'loot-core/client/actions';
 import { useDispatch } from '../../redux';
 import { theme } from '../../style';
 import { Link } from '../common/Link';
+import { useAuth } from '../../auth/AuthProvider';
+import { Permissions } from '../../auth/types';
 
 export function WelcomeScreen() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const { hasPermission } = useAuth();
 
   return (
     <View
@@ -64,14 +67,16 @@ export function WelcomeScreen() {
             topics.
           </Trans>
         </Paragraph>
-        {/* <Paragraph style={{ color: theme.pageTextLight }}>
-          <Trans>
-            Get started by importing an existing budget file from Actual or
-            another budgeting app, create a demo budget file, or start fresh
-            with an empty budget. You can always create or import another budget
-            later.
-          </Trans>
-        </Paragraph> */}
+        {hasPermission(Permissions.ADMINISTRATOR) && (
+          <Paragraph style={{ color: theme.pageTextLight }}>
+            <Trans>
+              Get started by importing an existing budget file from Actual or
+              another budgeting app, create a demo budget file, or start fresh
+              with an empty budget. You can always create or import another
+              budget later.
+            </Trans>
+          </Paragraph>
+        )}
       </View>
       <View
         style={{
@@ -81,9 +86,11 @@ export function WelcomeScreen() {
           flexShrink: 0,
         }}
       >
-        {/* <Button onPress={() => dispatch(pushModal('import'))}>
-          {t('Import my budget')}
-        </Button> */}
+        {hasPermission(Permissions.ADMINISTRATOR) && (
+          <Button onPress={() => dispatch(pushModal('import'))}>
+            {t('Import my budget')}
+          </Button>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -91,9 +98,12 @@ export function WelcomeScreen() {
             gap: 10,
           }}
         >
-          {/* <Button onPress={() => dispatch(createBudget({ testMode: true }))}>
-            {t('View demo')}
-          </Button> */}
+          {hasPermission(Permissions.ADMINISTRATOR) && (
+
+            <Button onPress={() => dispatch(createBudget({ testMode: true }))}>
+              {t('View demo')}
+            </Button>
+          )}
           <Button
             variant="primary"
             autoFocus
