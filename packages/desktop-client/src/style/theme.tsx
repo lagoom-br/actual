@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 // import { isNonProductionEnvironment } from 'loot-core/shared/environment';
 import type { DarkTheme, Theme } from 'loot-core/types/prefs';
 
-import type * as darkTheme from './themes/dark';
+import * as darkTheme from './themes/dark';
 import type * as developmentTheme from './themes/development';
 import * as lightTheme from './themes/light';
 import type * as midnightTheme from './themes/midnight';
@@ -12,12 +12,12 @@ import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
 
 const themes = {
   light: { name: 'Light', colors: lightTheme },
-  //dark: { name: 'Dark', colors: darkTheme },
+  dark: { name: 'Dark', colors: darkTheme },
   // midnight: { name: 'Midnight', colors: midnightTheme },
-  //auto: { name: 'System default', colors: darkTheme },
+  auto: { name: 'System default', colors: darkTheme },
   // ...(isNonProductionEnvironment() && {
   //   development: { name: 'Development', colors: developmentTheme },
-  // }),
+  //},
 };
 
 export const themeOptions = Object.entries(themes).map(
@@ -25,7 +25,7 @@ export const themeOptions = Object.entries(themes).map(
 );
 
 export const darkThemeOptions = Object.entries({
-  dark: themes.light,
+  dark: themes.dark,
   // midnight: themes.midnight,
 }).map(([key, { name }]) => [key, name] as [DarkTheme, string]);
 
@@ -53,11 +53,11 @@ export function ThemeStyle() {
 
   useEffect(() => {
     if (activeTheme === 'auto') {
-      //const darkTheme = themes[darkThemePreference];
+      const darkTheme = themes[darkThemePreference];
 
       function darkThemeMediaQueryListener(event: MediaQueryListEvent) {
         if (event.matches) {
-          //setThemeColors(darkTheme.colors);
+          setThemeColors(darkTheme.colors);
         } else {
           setThemeColors(themes['light'].colors);
         }
@@ -71,11 +71,11 @@ export function ThemeStyle() {
         darkThemeMediaQueryListener,
       );
 
-      // if (darkThemeMediaQuery.matches) {
-      //   setThemeColors(darkTheme.colors);
-      // } else {
-      setThemeColors(themes['light'].colors);
-      // }
+      if (darkThemeMediaQuery.matches) {
+        setThemeColors(darkTheme.colors);
+      } else {
+        setThemeColors(themes['light'].colors);
+      }
 
       return () => {
         darkThemeMediaQuery.removeEventListener(
