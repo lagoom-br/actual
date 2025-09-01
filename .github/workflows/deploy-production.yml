@@ -12,71 +12,30 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout actual-server repository
-        uses: actions/checkout@v4
-        with:
-          repository: lagoom-br/actual-server
-          path: actual-server
-          fetch-depth: 1
-          ref: master
-
       - name: Checkout actual repository
         uses: actions/checkout@v4
         with:
           repository: lagoom-br/actual
-          path: actual-server/actual
+          path: actual
           fetch-depth: 1
           ref: master
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
-      - name: Install Yarn
-        run: npm install -g yarn
-
-      - name: Install dependencies for actual
-        run: |
-          cd actual-server/actual
-          yarn install
-
-      - name: Build actual
-        run: |
-          cd actual-server/actual
-          yarn run build:browser
-
-      - name: Update actual-server package.json to reference actual build
-        run: |
-          cd actual-server
-          jq '.dependencies["@actual-app/web"] = "file:./actual/packages/desktop-client"' package.json > package.tmp.json
-          mv package.tmp.json package.json
-
-      - name: Install dependencies for actual-server (Update)
-        run: |
-          cd actual-server
-          yarn install --mode=update-lockfile
-
-      - name: Install dependencies for actual-server (Install)
-        run: |
-          cd actual-server
-          yarn install --no-immutable
+      - name: Enable Corepack (Yarn 4+)
+        run: corepack enable
 
       - name: Install Flyctl
         run: |
           curl -L https://fly.io/install.sh | sh
           echo "$HOME/.fly/bin" >> $GITHUB_PATH
 
-      - name: Modify Dockerfile
-        run: |
-          cd actual-server
-          awk '/WORKDIR \/app/ {print; print "COPY ./actual /app/actual"; next}1' Dockerfile > Dockerfile.tmp
-          mv Dockerfile.tmp Dockerfile
-
       - name: Deploy to Fly.io (Production)
         env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_PROD }}
         run: |
-          cd actual-server
           flyctl deploy --app fiwell-production --local-only --dockerfile sync-server.Dockerfile --config flyio-prod.toml  \
               --env ACTUAL_OPENID_AUTO_LOGIN=true

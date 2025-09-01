@@ -7,7 +7,7 @@ app = 'fiwell-production'
 primary_region = 'gru'
 
 [experimental]
-  cmd = ['node', '--max-old-space-size=180', 'app.js']
+  cmd = ['node', '--max-old-space-size=180', 'build/app.js']
   auto_rollback = true
 
 [env]
