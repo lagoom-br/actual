@@ -50,14 +50,27 @@ export const signOut = createAppAsyncThunk(
   `${sliceName}/signOut`,
   async (openidEnabled: boolean, { dispatch }) => {
     if (openidEnabled && !isElectron()) {
-      const { redirect_url } = await send('subscribe-logout-openid', {
-        returnUrl: window.location.origin,
+      // Get logout URL first while session is still valid
+      const response = await send('subscribe-logout-openid', {
+        returnUrl: `${window.location.origin}`,
       });
 
-      window.location.href = redirect_url;
-    } else {
-      await send('subscribe-sign-out');
+      if (response && response.url) {
+        // Clear local session before redirect
+        await send('subscribe-clear-session');
+        // Redirect to Auth0 logout
+        window.location.href = response.url;
 
+      } else {
+        // Clear local session if no OpenID logout URL
+        await send('subscribe-clear-session');
+        dispatch(getUserData());
+        dispatch(loadGlobalPrefs());
+        dispatch(closeBudget());
+      }
+    } else {
+      // Clear local session for non-OpenID logout
+      await send('subscribe-clear-session');
       dispatch(getUserData());
       dispatch(loadGlobalPrefs());
       dispatch(closeBudget());

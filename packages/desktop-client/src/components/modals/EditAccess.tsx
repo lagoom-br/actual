@@ -25,6 +25,7 @@ import {
 import { addNotification } from '@desktop-client/notifications/notificationsSlice';
 import { useDispatch } from '@desktop-client/redux';
 import { signOut } from '@desktop-client/users/usersSlice';
+import { useLoginMethod } from '@desktop-client/components/ServerContext';
 
 type EditUserAccessProps = Extract<
   ModalType,
@@ -37,6 +38,7 @@ export function EditUserAccess({
 }: EditUserAccessProps) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const currentLoginMethod = useLoginMethod();
 
   const [userId, setUserId] = useState(defaultUserAccess.userId ?? '');
   const [error, setSetError] = useState('');
@@ -82,7 +84,7 @@ export function EditUserAccess({
               button: {
                 title: t('Go to login'),
                 action: () => {
-                  dispatch(signOut(true));
+                  dispatch(signOut(currentLoginMethod === 'openid'));
                 },
               },
             },

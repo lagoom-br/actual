@@ -42,10 +42,7 @@ app.get('/needs-bootstrap', (req, res) => {
           : getLoginMethod(),
       availableLoginMethods,
       multiuser: getActiveLoginMethod() === 'openid',
-      autoLogin:
-        'openId' in config && 'autoLogin' in config.openId
-          ? config.openId.autoLogin
-          : false,
+      autoLogin: config.get('openId.autoLogin'),
     },
   });
 });
@@ -67,7 +64,6 @@ app.get('/login-methods', (req, res) => {
 
 app.post('/login', async (req, res) => {
   const loginMethod = getLoginMethod(req);
-  console.log('Logging in via ' + loginMethod);
   let tokenRes = null;
   switch (loginMethod) {
     case 'header': {
@@ -104,6 +100,7 @@ app.post('/login', async (req, res) => {
         res.status(400).send({ status: 'error', reason: error });
         return;
       }
+      
       res.send({ status: 'ok', data: { returnUrl: url } });
       return;
     }
@@ -112,7 +109,8 @@ app.post('/login', async (req, res) => {
       tokenRes = loginWithPassword(req.body.password);
       break;
   }
-  const { error, token } = tokenRes;
+  
+  const { error, token } = tokenRes || {};
 
   if (error) {
     res.status(400).send({ status: 'error', reason: error });
@@ -121,6 +119,8 @@ app.post('/login', async (req, res) => {
 
   res.send({ status: 'ok', data: { token } });
 });
+
+
 
 app.post('/change-password', (req, res) => {
   const session = validateSession(req, res);

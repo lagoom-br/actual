@@ -162,6 +162,8 @@ function AppInner() {
     }
   }, [dispatch, t, userData?.tokenExpired]);
 
+
+
   return budgetId ? <FinancesApp /> : <ManagementApp />;
 }
 

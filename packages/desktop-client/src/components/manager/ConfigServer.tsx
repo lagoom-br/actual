@@ -28,6 +28,7 @@ import { useNavigate } from '@desktop-client/hooks/useNavigate';
 import { saveGlobalPrefs } from '@desktop-client/prefs/prefsSlice';
 import { useDispatch } from '@desktop-client/redux';
 import { loggedIn, signOut } from '@desktop-client/users/usersSlice';
+import { useLoginMethod } from '@desktop-client/components/ServerContext';
 
 export function ElectronServerConfig({
   onDoNotUseServer,
@@ -293,6 +294,7 @@ export function ConfigServer() {
   const [url, setUrl] = useState('');
   const currentUrl = useServerURL();
   const setServerUrl = useSetServerURL();
+  const currentLoginMethod = useLoginMethod();
   useEffect(() => {
     setUrl(currentUrl);
   }, [currentUrl]);
@@ -343,7 +345,7 @@ export function ConfigServer() {
       setError(error);
     } else {
       setLoading(false);
-      await dispatch(signOut(true));
+      await dispatch(signOut(currentLoginMethod === 'openid'));
       navigate('/');
     }
   }

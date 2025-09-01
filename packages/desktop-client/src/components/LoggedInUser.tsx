@@ -24,6 +24,7 @@ import { useMetadataPref } from '@desktop-client/hooks/useMetadataPref';
 import { useNavigate } from '@desktop-client/hooks/useNavigate';
 import { useSelector, useDispatch } from '@desktop-client/redux';
 import { getUserData, signOut } from '@desktop-client/users/usersSlice';
+import { useLoginMethod } from '@desktop-client/components/ServerContext';
 
 type LoggedInUserProps = {
   hideIfNoServer?: boolean;
@@ -49,6 +50,7 @@ export function LoggedInUser({
   const location = useLocation();
   const { hasPermission } = useAuth();
   const multiuserEnabled = useMultiuserEnabled();
+  const currentLoginMethod = useLoginMethod();
   const allFiles = useSelector(state => state.budgetfiles.allFiles || []);
   const remoteFiles = allFiles.filter(
     f => f.state === 'remote' || f.state === 'synced' || f.state === 'detached',
@@ -121,7 +123,7 @@ export function LoggedInUser({
         navigate('/');
         break;
       case 'sign-out':
-        dispatch(signOut(multiuserEnabled));
+        dispatch(signOut(currentLoginMethod === 'openid'));
         break;
       case 'config-server':
         await onCloseBudget();

@@ -31,6 +31,7 @@ import {
 import { addNotification } from '@desktop-client/notifications/notificationsSlice';
 import { useDispatch } from '@desktop-client/redux';
 import { signOut } from '@desktop-client/users/usersSlice';
+import { useLoginMethod } from '@desktop-client/components/ServerContext';
 
 type User = UserEntity;
 type NewUser = NewUserEntity;
@@ -77,6 +78,7 @@ function useSaveUser() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { getUserDirectoryErrors } = useGetUserDirectoryErrors();
+  const currentLoginMethod = useLoginMethod();
 
   async function saveUser(
     method: 'user-add' | 'user-update',
@@ -104,7 +106,7 @@ function useSaveUser() {
               button: {
                 title: t('Go to login'),
                 action: () => {
-                  dispatch(signOut(true));
+                  dispatch(signOut(currentLoginMethod === 'openid'));
                 },
               },
             },

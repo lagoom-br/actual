@@ -53,7 +53,11 @@ export function ThemeStyle() {
 
   useEffect(() => {
     if (activeTheme === 'auto') {
-      const darkTheme = themes[darkThemePreference];
+      // Map unavailable themes to available ones
+      const availableThemeKey = darkThemePreference in themes 
+        ? (darkThemePreference as keyof typeof themes)
+        : 'dark';
+      const darkTheme = themes[availableThemeKey];
 
       function darkThemeMediaQueryListener(event: MediaQueryListEvent) {
         if (event.matches) {
@@ -84,7 +88,11 @@ export function ThemeStyle() {
         );
       };
     } else {
-      setThemeColors(themes[activeTheme as keyof typeof themes]?.colors);
+      // Handle case where activeTheme might not be available in themes object
+      const availableTheme = activeTheme in themes 
+        ? (activeTheme as keyof typeof themes)
+        : 'light';
+      setThemeColors(themes[availableTheme]?.colors);
     }
   }, [activeTheme, darkThemePreference]);
 
