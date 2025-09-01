@@ -240,7 +240,7 @@ async function signIn(
         loginMethod?: string;
       }
     | {
-        return_url: string;
+        returnUrl: string;
         loginMethod?: 'openid';
       },
 ) {

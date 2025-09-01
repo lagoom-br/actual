@@ -308,7 +308,7 @@ function HeaderLogin({ error }) {
 
 async function callOpenIdRedirectURL() {
   const { error, return_url } = await send('subscribe-sign-in', {
-    return_url: isElectron()
+    returnUrl: isElectron()
       ? await window.Actual.startOAuthServer()
       : window.location.origin,
     loginMethod: 'openid',
