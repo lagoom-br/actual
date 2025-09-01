@@ -1,15 +1,15 @@
-name: Deploy to Fly.io (Dev)
+name: Deploy to Fly.io (Production)
 
 on:
-  push:
-    branches:
-      - staging
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 jobs:
-  deploy-staging:
+  deploy-production:
     runs-on: ubuntu-latest
-    environment: staging
+    environment: production
 
     steps:
       - name: Checkout actual-server repository
@@ -18,7 +18,7 @@ jobs:
           repository: lagoom-br/actual-server
           path: actual-server
           fetch-depth: 1
-          ref: staging
+          ref: master
 
       - name: Checkout actual repository
         uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
           repository: lagoom-br/actual
           path: actual-server/actual
           fetch-depth: 1
-          ref: staging
+          ref: master
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -73,10 +73,10 @@ jobs:
           awk '/WORKDIR \/app/ {print; print "COPY ./actual /app/actual"; next}1' Dockerfile > Dockerfile.tmp
           mv Dockerfile.tmp Dockerfile
 
-      - name: Deploy to Fly.io (DEV)
+      - name: Deploy to Fly.io (Production)
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: |
           cd actual-server
-          flyctl deploy --app fiwell-dev --local-only --dockerfile Dockerfile --config flyio-dev.toml  \
+          flyctl deploy --app fiwell-production --local-only --dockerfile sync-server.Dockerfile --config flyio-prod.toml  \
               --env ACTUAL_OPENID_AUTO_LOGIN=true
