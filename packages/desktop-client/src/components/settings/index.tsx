@@ -95,7 +95,7 @@ function About() {
           <Text>
             <Trans>Server version: {{ version }}</Trans>
           </Text>
-          {isOutdated ? (
+          {/* {isOutdated ? (
             <Link
               variant="external"
               to="https://actualbudget.org/docs/releases"
@@ -116,7 +116,7 @@ function About() {
             >
               <Trans>Release Notes</Trans>
             </Link>
-          </Text>
+          </Text> */}
         </View>
       )}
     </Setting>
