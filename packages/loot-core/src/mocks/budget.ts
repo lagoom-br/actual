@@ -47,9 +47,7 @@ function findMin<T, K extends keyof T>(items: T[], field: K) {
 }
 
 function getStartingBalanceCat(categories: CategoryGroupEntity[]) {
-  return categories.find(
-    c => c.name === 'Starting Balances' || c.name === 'Saldos Iniciais',
-  ).id;
+  return categories.find(c => c.name === 'Starting Balances').id;
 }
 
 function extractCommonThings(
@@ -58,10 +56,7 @@ function extractCommonThings(
 ) {
   const incomePayee = payees.find(p => p.name === 'Deposit');
   const expensePayees = payees.filter(
-    p =>
-      p.name !== 'Deposit' &&
-      p.name !== 'Starting Balance' &&
-      p.name !== 'Saldos Iniciais',
+    p => p.name !== 'Deposit' && p.name !== 'Starting Balance',
   );
   const expenseGroup = groups.find(g => !g.is_income);
   const incomeGroup = groups.find(g => g.is_income);
@@ -250,9 +245,7 @@ async function fillPrimaryChecking(
 
   transactions.unshift({
     amount: 100000,
-    payee: payees.find(
-      p => p.name === 'Starting Balance' || p.name === 'Saldos Iniciais',
-    ).id,
+    payee: payees.find(p => p.name === 'Starting Balance').id,
     account: account.id,
     date: earliestDate,
     category: getStartingBalanceCat(incomeGroup.categories),
@@ -297,9 +290,7 @@ async function fillChecking(handlers, account, payees, groups) {
 
   transactions.unshift({
     amount: integer(90000, 120000),
-    payee: payees.find(
-      p => p.name === 'Starting Balance' || p.name === 'Saldos Iniciais',
-    ).id,
+    payee: payees.find(p => p.name === 'Starting Balance').id,
     account: account.id,
     date: transactions[transactions.length - 1].date,
     category: getStartingBalanceCat(incomeGroup.categories),
@@ -335,9 +326,7 @@ async function fillInvestment(handlers, account, payees, groups) {
 
   transactions.unshift({
     amount: integer(10000, 20000),
-    payee: payees.find(
-      p => p.name === 'Starting Balance' || p.name === 'Saldos Iniciais',
-    ).id,
+    payee: payees.find(p => p.name === 'Starting Balance').id,
     account: account.id,
     date: findMin(transactions, 'date').date,
     category: getStartingBalanceCat(incomeGroup.categories),
@@ -382,9 +371,7 @@ async function fillSavings(handlers, account, payees, groups) {
 
   transactions.unshift({
     amount: 30000,
-    payee: payees.find(
-      p => p.name === 'Starting Balance' || p.name === 'Saldos Iniciais',
-    ).id,
+    payee: payees.find(p => p.name === 'Starting Balance').id,
     account: account.id,
     date: transactions[transactions.length - 1].date,
     category: getStartingBalanceCat(incomeGroup.categories),
@@ -407,9 +394,7 @@ async function fillMortgage(handlers, account, payees, groups) {
   const transactions = [
     {
       amount: integer(-3000, -3500) * 100 * 100,
-      payee: payees.find(
-        p => p.name === 'Starting Balance' || p.name === 'Saldos Iniciais',
-      ).id,
+      payee: payees.find(p => p.name === 'Starting Balance').id,
       account: account.id,
       date:
         monthUtils.subMonths(monthUtils.currentDay(), numTransactions) + '-02',
@@ -446,9 +431,7 @@ async function fillOther(handlers, account, payees, groups) {
     {
       id: uuidv4(),
       amount: integer(3250, 3700) * 100 * 100,
-      payee: payees.find(
-        p => p.name === 'Starting Balance' || p.name === 'Saldos Iniciais',
-      ).id,
+      payee: payees.find(p => p.name === 'Starting Balance').id,
       account: account.id,
       date:
         monthUtils.subMonths(monthUtils.currentDay(), numTransactions) + '-02',

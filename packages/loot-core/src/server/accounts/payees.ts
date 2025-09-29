@@ -20,7 +20,7 @@ export async function getStartingBalancePayee() {
   let category = await db.first<db.DbCategory>(`
     SELECT * FROM categories
       WHERE is_income = 1 AND
-      (LOWER(name) = 'starting balances' OR LOWER(name) = 'saldos iniciais') AND
+      LOWER(name) = 'starting balances' AND
       tombstone = 0
   `);
   if (category === null) {
@@ -29,11 +29,7 @@ export async function getStartingBalancePayee() {
     );
   }
 
-  const id = await createPayee(
-    category.name === 'Saldos Iniciais'
-      ? 'Saldos Iniciais'
-      : 'Starting Balance',
-  );
+  const id = await createPayee('Starting Balance');
   return {
     id,
     category: category ? category.id : null,

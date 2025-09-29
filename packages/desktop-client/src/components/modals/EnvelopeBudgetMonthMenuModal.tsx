@@ -96,7 +96,7 @@ export function EnvelopeBudgetMonthMenuModal({
               }}
             >
               <Notes
-                notes={originalNotes?.length > 0 ? originalNotes : 'No notes'}
+                notes={originalNotes?.length > 0 ? originalNotes : t('No notes')}
                 editable={false}
                 focused={false}
                 getStyle={() => ({
