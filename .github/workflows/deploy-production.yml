@@ -37,5 +37,5 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_PROD }}
         run: |
-          flyctl deploy --app fiwell-production --local-only --dockerfile sync-server.Dockerfile --config flyio-prod.toml  \
+          flyctl deploy --app fiwell-production --local-only --dockerfile sync-server.Dockerfile --config packages/sync-server/flyio-prod.toml  \
               --env ACTUAL_OPENID_AUTO_LOGIN=true
