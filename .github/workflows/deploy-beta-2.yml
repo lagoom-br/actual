@@ -1,4 +1,4 @@
-name: Deploy to Fly.io (Beta 1)
+name: Deploy to Fly.io (Beta 2)
 
 on:
   release:
@@ -37,5 +37,5 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: |
-          flyctl deploy --app fiwell-beta-1 --local-only --dockerfile sync-server.Dockerfile --config packages/sync-server/flyio-beta-1.toml  \
+          flyctl deploy --app fiwell-beta-2 --local-only --dockerfile sync-server.Dockerfile --config packages/sync-server/flyio-beta-2.toml  \
               --env ACTUAL_OPENID_AUTO_LOGIN=true
