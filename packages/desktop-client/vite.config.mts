@@ -159,7 +159,7 @@ export default defineConfig(async ({ mode }) => {
       mode === 'desktop'
         ? undefined
         : VitePWA({
-            registerType: 'prompt',
+            registerType: 'autoUpdate',
             // TODO:  The plugin worker build is currently disabled due to issues with offline support. Fix this
             // strategies: 'injectManifest',
             // srcDir: 'service-worker',
