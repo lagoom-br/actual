@@ -134,57 +134,57 @@ export function FinancesApp() {
     }
 
     run();
-  }, []);
+  });
 
-  useEffect(() => {
-    dispatch(getLatestAppVersion());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getLatestAppVersion());
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (notifyWhenUpdateIsAvailable && versionInfo) {
-      if (
-        versionInfo.isOutdated &&
-        lastUsedVersion !== versionInfo.latestVersion
-      ) {
-        dispatch(
-          addNotification({
-            notification: {
-              type: 'message',
-              title: t('A new version of Actual is available!'),
-              message:
-                (process.env.REACT_APP_IS_PIKAPODS ?? '').toLowerCase() ===
-                'true'
-                  ? t(
-                      'A new version of Actual is available! Your Pikapods instance will be automatically updated in the next few days - no action needed.',
-                    )
-                  : t(
-                      'Version {{latestVersion}} of Actual was recently released.',
-                      { latestVersion: versionInfo.latestVersion },
-                    ),
-              sticky: true,
-              id: 'update-notification',
-              button: {
-                title: t('Open changelog'),
-                action: () => {
-                  window.open('https://actualbudget.org/docs/releases');
-                },
-              },
-              onClose: () => {
-                setLastUsedVersion(versionInfo.latestVersion);
-              },
-            },
-          }),
-        );
-      }
-    }
-  }, [
-    dispatch,
-    lastUsedVersion,
-    notifyWhenUpdateIsAvailable,
-    setLastUsedVersion,
-    t,
-    versionInfo,
-  ]);
+  // useEffect(() => {
+  //   if (notifyWhenUpdateIsAvailable && versionInfo) {
+  //     if (
+  //       versionInfo.isOutdated &&
+  //       lastUsedVersion !== versionInfo.latestVersion
+  //     ) {
+  //       dispatch(
+  //         addNotification({
+  //           notification: {
+  //             type: 'message',
+  //             title: t('A new version of Actual is available!'),
+  //             message:
+  //               (process.env.REACT_APP_IS_PIKAPODS ?? '').toLowerCase() ===
+  //               'true'
+  //                 ? t(
+  //                     'A new version of Actual is available! Your Pikapods instance will be automatically updated in the next few days - no action needed.',
+  //                   )
+  //                 : t(
+  //                     'Version {{latestVersion}} of Actual was recently released.',
+  //                     { latestVersion: versionInfo.latestVersion },
+  //                   ),
+  //             sticky: true,
+  //             id: 'update-notification',
+  //             button: {
+  //               title: t('Open changelog'),
+  //               action: () => {
+  //                 window.open('https://actualbudget.org/docs/releases');
+  //               },
+  //             },
+  //             onClose: () => {
+  //               setLastUsedVersion(versionInfo.latestVersion);
+  //             },
+  //           },
+  //         }),
+  //       );
+  //     }
+  //   }
+  // }, [
+  //   dispatch,
+  //   lastUsedVersion,
+  //   notifyWhenUpdateIsAvailable,
+  //   setLastUsedVersion,
+  //   t,
+  //   versionInfo,
+  // ]);
 
   const scrollableRef = useRef<HTMLDivElement>(null);
 
