@@ -20,5 +20,11 @@ export const SvgLogo = (props: SVGProps<SVGSVGElement>) => (
   //     d="m21.777 14.568.932 2.544-21.203 7.775a.32.32 0 0 1-.41-.19l-.713-1.944a.32.32 0 0 1 .19-.41l21.204-7.775Z"
   //   />
   // </svg>
-  <img src={'/logo-mobile.png'} style={{ ...props.style }} width={props.width} height={props.height} alt="Logo" />
+  <img
+    src={'/logo-mobile.png'}
+    style={{ ...props.style }}
+    width={props.width}
+    height={props.height}
+    alt="Logo"
+  />
 );

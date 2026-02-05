@@ -98,6 +98,7 @@ export function useBootstrapped(redirect = true) {
     location,
     navigate,
     redirect,
+    setAutoLogin,
     setLoginMethods,
     setMultiuserEnabled,
     setServerURL,

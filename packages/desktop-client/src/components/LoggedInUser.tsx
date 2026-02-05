@@ -22,9 +22,9 @@ import { type TransObjectLiteral } from 'loot-core/types/util';
 
 import { PrivacyFilter } from './PrivacyFilter';
 import {
+  useLoginMethod,
   useMultiuserEnabled,
   useServerURL,
-  useLoginMethod,
 } from './ServerContext';
 
 import { useAuth } from '@desktop-client/auth/AuthProvider';

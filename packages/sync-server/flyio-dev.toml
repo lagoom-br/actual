@@ -7,48 +7,48 @@ app = 'fiwell-dev'
 primary_region = 'gru'
 
 [experimental]
-  cmd = ['node', '--max-old-space-size=180', 'build/app.js']
-  auto_rollback = true
+cmd = ['node', '--max-old-space-size=180', 'build/app.js']
+auto_rollback = true
 
 [env]
-  PORT = '5006'
-  TINI_SUBREAPER = '1'
+PORT = '5006'
+TINI_SUBREAPER = '1'
 
 [[mounts]]
-  source = 'actual_data'
-  destination = '/data'
+source = 'actual_data'
+destination = '/data'
 
 [http_service]
-  internal_port = 5006
-  force_https = true
-  auto_stop_machines = 'stop'
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+internal_port = 5006
+force_https = true
+auto_stop_machines = 'stop'
+auto_start_machines = true
+min_machines_running = 0
+processes = ['app']
 
 [[services]]
-  protocol = 'tcp'
-  internal_port = 5006
-  processes = ['app']
+protocol = 'tcp'
+internal_port = 5006
+processes = ['app']
 
-  [[services.ports]]
-    port = 80
-    handlers = ['http']
-    force_https = true
+[[services.ports]]
+port = 80
+handlers = ['http']
+force_https = true
 
-  [[services.ports]]
-    port = 443
-    handlers = ['tls', 'http']
+[[services.ports]]
+port = 443
+handlers = ['tls', 'http']
 
-  [services.concurrency]
-    type = 'connections'
-    hard_limit = 25
-    soft_limit = 20
+[services.concurrency]
+type = 'connections'
+hard_limit = 25
+soft_limit = 20
 
-  [[services.tcp_checks]]
-    interval = '15s'
-    timeout = '2s'
-    grace_period = '10s'
+[[services.tcp_checks]]
+interval = '15s'
+timeout = '2s'
+grace_period = '10s'
 
 [[vm]]
-  size = 'shared-cpu-1x'
+size = 'shared-cpu-1x'

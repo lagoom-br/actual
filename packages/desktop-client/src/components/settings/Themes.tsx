@@ -1,7 +1,6 @@
-import React, { useEffect, type ReactNode } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import React, { useEffect } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
-import { Menu } from '@actual-app/components/menu';
 import { Select } from '@actual-app/components/select';
 import { Text } from '@actual-app/components/text';
 import { theme as themeStyle } from '@actual-app/components/theme';
@@ -9,42 +8,31 @@ import { tokens } from '@actual-app/components/tokens';
 import { View } from '@actual-app/components/view';
 import { css } from '@emotion/css';
 
-// import { type DarkTheme, type Theme } from 'loot-core/types/prefs';
 import { type Theme } from 'loot-core/types/prefs';
 
-import { ThemeInstaller } from './ThemeInstaller';
 import { Column, Setting } from './UI';
 
 import { useSidebar } from '@desktop-client/components/sidebar/SidebarProvider';
-import { useFeatureFlag } from '@desktop-client/hooks/useFeatureFlag';
-import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
-import {
-  darkThemeOptions,
-  themeOptions,
-  useTheme,
-  // usePreferredDarkTheme,
-  // darkThemeOptions,
-} from '@desktop-client/style';
-import {
-  parseInstalledTheme,
-  serializeInstalledTheme,
-  type InstalledTheme,
-} from '@desktop-client/style/customThemes';
+import { themeOptions, useTheme } from '@desktop-client/style';
 
-const INSTALL_NEW_VALUE = '__install_new__';
+const SUPPORTED_THEMES = ['light', 'dark'] as const;
+type SupportedTheme = (typeof SUPPORTED_THEMES)[number];
+
+function isSupportedTheme(theme: string): theme is SupportedTheme {
+  return SUPPORTED_THEMES.includes(theme as SupportedTheme);
+}
 
 export function ThemeSettings() {
   const { t } = useTranslation();
   const sidebar = useSidebar();
   const [theme, switchTheme] = useTheme();
 
-  //forcing theme to light if auto
+  // Migrate legacy theme values (auto, midnight, development, custom) to light
   useEffect(() => {
-    if (theme === 'auto') {
+    if (!isSupportedTheme(theme)) {
       switchTheme('light');
     }
   }, [theme, switchTheme]);
-  // const [darkTheme, switchDarkTheme] = usePreferredDarkTheme();
 
   return (
     <Setting
@@ -68,7 +56,7 @@ export function ThemeSettings() {
               onChange={value => {
                 switchTheme(value);
               }}
-              value={theme}
+              value={isSupportedTheme(theme) ? theme : 'light'}
               options={themeOptions}
               className={css({
                 '&[data-hovered]': {

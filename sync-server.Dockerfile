@@ -1,7 +1,7 @@
 FROM node:22-bookworm AS deps
 
-# Install required packages
-RUN apt-get update && apt-get install -y openssl
+# Install required packages (git needed for cloning translations)
+RUN apt-get update && apt-get install -y openssl git
 
 WORKDIR /app
 

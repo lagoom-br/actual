@@ -19,9 +19,9 @@ import { View } from '@actual-app/components/view';
 import { Item } from './Item';
 import { SecondaryItem } from './SecondaryItem';
 
-import { useIsTestEnv } from '@desktop-client/hooks/useIsTestEnv';
 import { useAuth } from '@desktop-client/auth/AuthProvider';
 import { Permissions } from '@desktop-client/auth/types';
+import { useIsTestEnv } from '@desktop-client/hooks/useIsTestEnv';
 import { useSyncServerStatus } from '@desktop-client/hooks/useSyncServerStatus';
 
 export function PrimaryButtons() {

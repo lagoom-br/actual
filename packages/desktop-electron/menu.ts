@@ -153,7 +153,7 @@ export function getMenu() {
         {
           label: 'Keyboard Shortcuts',
           accelerator: '?',
-          enabled: !!budgetId,
+          enabled: true,
           click: function (_menuItem, focusedWin) {
             if (focusedWin) {
               const browserWindow = focusedWin as BrowserWindow;

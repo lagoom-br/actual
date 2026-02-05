@@ -52,7 +52,9 @@ const ServerContext = createContext<ServerContextValue>({
     throw new Error('ServerContext not initialized');
   },
   autoLogin: false,
-  setAutoLogin: () => {},
+  setAutoLogin: () => {
+    /* default no-op before provider mounts */
+  },
 });
 
 export const useServerURL = () => useContext(ServerContext).url;

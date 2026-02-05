@@ -254,7 +254,7 @@ async function signIn(
     loginInfo.loginMethod = 'password';
   }
 
-  interface ServerResponse {
+  type ServerResponse = {
     status?: string;
     data?: {
       token?: string;
@@ -265,7 +265,7 @@ async function signIn(
     return_url?: string;
     // Direct format (from post() function unwrapping)
     returnUrl?: string;
-  }
+  };
 
   let res: ServerResponse;
 

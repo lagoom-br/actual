@@ -1,0 +1,44 @@
+# Node modules (will be installed fresh in Docker)
+**/node_modules
+
+# Build artifacts
+packages/desktop-client/build
+packages/desktop-client/build-stats
+packages/desktop-client/build-electron
+packages/desktop-client/dev-dist
+packages/desktop-client/playwright-report
+packages/desktop-client/test-results
+packages/desktop-electron/build
+packages/desktop-electron/dist
+packages/desktop-electron/client-build
+packages/loot-core/lib-dist
+packages/api/dist
+packages/crdt/dist
+packages/sync-server/build
+packages/sync-server/coverage
+packages/plugins-service/dist
+
+# Symlinks that won't work in Docker
+packages/desktop-client/service-worker
+packages/desktop-client/public/kcab
+
+# Locale files (will be cloned in Docker)
+packages/desktop-client/locale
+
+# IDE and OS files
+.DS_Store
+*.log
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Test data
+data/
+data2/
+
+# Misc
+*.map
+stats.json

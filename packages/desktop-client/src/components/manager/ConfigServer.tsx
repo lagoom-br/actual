@@ -20,9 +20,9 @@ import { Title } from './subscribe/common';
 import { createBudget } from '@desktop-client/budgetfiles/budgetfilesSlice';
 import { Link } from '@desktop-client/components/common/Link';
 import {
+  useLoginMethod,
   useServerURL,
   useSetServerURL,
-  useLoginMethod,
 } from '@desktop-client/components/ServerContext';
 import { useGlobalPref } from '@desktop-client/hooks/useGlobalPref';
 import { useNavigate } from '@desktop-client/hooks/useNavigate';

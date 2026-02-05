@@ -42,7 +42,6 @@ import { useAccounts } from '@desktop-client/hooks/useAccounts';
 import { useMetaThemeColor } from '@desktop-client/hooks/useMetaThemeColor';
 import { useNavigate } from '@desktop-client/hooks/useNavigate';
 import { ScrollProvider } from '@desktop-client/hooks/useScrollListener';
-import { addNotification } from '@desktop-client/notifications/notificationsSlice';
 import { useDispatch, useSelector } from '@desktop-client/redux';
 
 function NarrowNotSupported({
@@ -103,7 +102,7 @@ export function FinancesApp() {
 
   const multiuserEnabled = useMultiuserEnabled();
 
-  const init = useEffectEvent(() => {
+  const _init = useEffectEvent(() => {
     // Wait a little bit to make sure the sync button will get the
     // sync start event. This can be improved later.
     setTimeout(async () => {
